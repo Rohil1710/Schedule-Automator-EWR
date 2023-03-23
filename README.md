@@ -2,7 +2,7 @@
 
 Tests for Final Project Assignments:
 
-Rohil - Task
-Tanis - Treatments
-Mehrnaz - Animal
+Rohil - Task,
+Tanis - Treatments,
+Mehrnaz - Animal,
 Abhyudai - ScheduleItem
