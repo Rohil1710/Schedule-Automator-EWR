@@ -197,7 +197,42 @@ public class ScheduleTest {
 
     }
 
+  //Basic test for Schedule Class:
+    @Test
+    public void testGetScheduleItem() {
+        
+        Treatment treatment1 = new Treatment(1, 6, 1, 0);
+        Treatment treatment2 = new Treatment(2, 6, 1, 2);
+        
+        Task task1 = new Task(1, 'Kit feeding', 30, 2);
+        Task task2 = new Task(2, 'Rebandage leg wound', 20, 1);
+    
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(treatment2);
+        ScheduleItem item3 = new ScheduleItem(task1);
+        ScheduleItem item4 = new ScheduleItem(task2);
 
+        ScheduleItem[] itemList1 = {item1, item2, item3, item4};
+        ScheduleItem[] itemList2 = {item1, item2, item3, item4};
+        ScheduleItem[] itemList2 = {item1, item2, item3, item4};
+
+        ScheduleItem[][] tasksPerHour = {itemList1, itemList2, itemList3};
+
+        int[] availableTime = {59, 59, 59};
+
+        Bool[] volunteerNeeded = {false, false, false};
+
+        Schedule schedule = new Schedule();
+        schedule.tasksPerHour = tasksPerHour;
+        schedule.availableTime = availableTime;
+        schedule.volunteerNeeded = volunteerNeeded;
+
+        System.out.println("\nTesting getTask...");
+        ScheduleItem expResult = new SchdeuleItem(item3);
+        ScheduleItem result = new SchdeuleItem(schedule.getScheduleItem(1, 2));
+        assertEquals("getScheduleItem was incorrect: ", expResult, result);
+
+       }
 
 
 }
