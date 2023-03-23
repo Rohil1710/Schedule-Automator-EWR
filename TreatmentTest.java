@@ -17,7 +17,7 @@
     @Test
     public void testGetAnimalID() {
 
-        Treatment treatment1 = new Treatment(1, 6, 1, 0);
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
 
         System.out.println("\nTesting getAnimalID...");
         int expResult = 6;
@@ -30,7 +30,7 @@
     @Test
     public void testGetTaskID() {
 
-        Treatment treatment1 = new Treatment(1, 6, 1, 0);
+        Treatment treatment1 = new Treatment(3, 6, 1, 4);
 
         System.out.println("\nTesting getTaskID...");
         int expResult = 1;
@@ -41,6 +41,8 @@
 
     @Test
     public void testGetStartHour() {
+
+        Treatment treatment1 = new Treatment(4, 6, 1, 6);
         
         System.out.println("\nTesting getStartHour...");
         int expResult = 1;
