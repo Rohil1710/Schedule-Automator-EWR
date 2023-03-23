@@ -233,6 +233,97 @@ public class ScheduleTest {
         assertEquals("getScheduleItem was incorrect: ", expResult, result);
 
        }
+  
+           @Test
+    public void testGetTreatmentID() {
+    
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = 2;
+        int result = item1.getTreatmenttID();
+        assertEquals("TreatmentID was incorrect: ", expResult, result);
+    }
+    
+    @Test
+    public void testGetAnimalID() {
+        
+        Animak animal1 = new Animal(7, "Spots", "Coyote");
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = 7;
+        int result = item1.getAnimaltID();
+        assertEquals("animalID was incorrect: ", expResult, result);
+    }
+
+    @Test
+    public void testGetTaskID() {
+        
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = 1;
+        item1.getTaskID();
+        assertEquals("taskID was incorrect: ", expResult, result);
+    }
+
+    @Test
+    public void testGetStartHour() {
+        
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = 2;
+        item1.getStartHour();
+        assertEquals("StartHour was incorrect: ", expResult, result);
+    }
+
+    @Test
+    public void testGetTaskDescription() {
+        
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = "feeding";
+        item1.getTaskDescription();
+        assertEquals("TaskDescription was incorrect: ", expResult, result);
+    }
+
+    @Test
+    public void testGetTaskDuration() {
+        
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = 6;
+        item1.getTaskDuration();
+        assertEquals("TaskDuration was incorrect: ", expResult, result);
+    }
+
+    @Test
+    public void testGetTaskMaxTimeVariation() {
+        
+        Treatment treatment1 = new Treatment(2, 6, 1, 2);
+        Task task1 = new Task(1,2,3,"feeding");
+
+        ScheduleItem item1 = new ScheduleItem(treatment1);
+        ScheduleItem item2 = new ScheduleItem(task1);
+        int expResult = 3;
+        item1.getTaskMaxTimeVariation();
+        assertEquals("TaskMaxTimeVariation was incorrect: ", expResult, result);
+    }
 
 
 }
