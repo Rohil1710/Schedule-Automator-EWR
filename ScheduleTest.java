@@ -2,7 +2,7 @@ import org.junit.*;
 import static org.junit.Assert.*;
 
 public class ScheduleTest {
-
+  //Tests for class Animal
     @Test
     public void testGetNickName() {
         Animal animalFox = new Animal(16, "crepuscular", "Spots", "fox", false, false);
