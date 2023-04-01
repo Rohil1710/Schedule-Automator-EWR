@@ -1,3 +1,4 @@
+package edu.ucalgary.oop;
 
 public class Animal {
     private String species;
