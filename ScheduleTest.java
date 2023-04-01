@@ -1,8 +1,11 @@
 import org.junit.*;
+
+import edu.ucalgary.oop.Animal;
+
 import static org.junit.Assert.*;
 
 public class ScheduleTest {
-  //Tests for class Animal
+    // Tests for class Animal
     @Test
     public void testGetNickName() {
         Animal animalFox = new Animal(16, "crepuscular", "Spots", "fox", false, false);
@@ -33,9 +36,8 @@ public class ScheduleTest {
         boolean expectedOrphan = true;
         String actualOrphan = animalRaccoonBaby.getOrphan();
         assertEquals(expectedOrphan, actualOrphan);
-        
+
     }
-        
 
     @Test
     public void TestGetNeedTreatment() {
@@ -92,8 +94,8 @@ public class ScheduleTest {
         int actualCageCleanDuration = enumValue.getCageCleanDuration();
         assertEquals(expectedCageCleanDuration, actualCageCleanDuration);
     }
-    
-    //Basic Tests for Treatment class to be added to main ScheduleTest file
+
+    // Basic Tests for Treatment class to be added to main ScheduleTest file
 
     @Test
     public void testGetTreatmentID() {
@@ -119,7 +121,6 @@ public class ScheduleTest {
 
     }
 
-
     @Test
     public void testGetTaskID() {
 
@@ -136,17 +137,15 @@ public class ScheduleTest {
     public void testGetStartHour() {
 
         Treatment treatment1 = new Treatment(4, 6, 1, 6);
-        
+
         System.out.println("\nTesting getStartHour...");
         int expResult = 1;
         int result = treatment1.getStartHour();
         assertEquals("startHour was incorrect: ", expResult, result);
 
     }
-    
-  
-    //Basic Tests for Task class to be added to main ScheduleTest file
 
+    // Basic Tests for Task class to be added to main ScheduleTest file
 
     @Test
     public void testGetTaskID() {
@@ -172,7 +171,6 @@ public class ScheduleTest {
 
     }
 
-
     @Test
     public void testGetTaskDuration() {
 
@@ -197,7 +195,7 @@ public class ScheduleTest {
 
     }
 
-  //Basic test for Schedule Class:
+    // Basic test for Schedule Class:
     @Test
     public void testGetScheduleItem() {
         
@@ -233,12 +231,12 @@ public class ScheduleTest {
         assertEquals("getScheduleItem was incorrect: ", expResult, result);
 
        }
-  
-           @Test
+
+    @Test
     public void testGetTreatmentID() {
-    
+
         Treatment treatment1 = new Treatment(2, 6, 1, 2);
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -246,12 +244,12 @@ public class ScheduleTest {
         int result = item1.getTreatmenttID();
         assertEquals("TreatmentID was incorrect: ", expResult, result);
     }
-    
+
     @Test
     public void testGetAnimalID() {
-        
+
         Animak animal1 = new Animal(7, "Spots", "Coyote");
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -262,9 +260,9 @@ public class ScheduleTest {
 
     @Test
     public void testGetTaskID() {
-        
+
         Treatment treatment1 = new Treatment(2, 6, 1, 2);
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -275,9 +273,9 @@ public class ScheduleTest {
 
     @Test
     public void testGetStartHour() {
-        
+
         Treatment treatment1 = new Treatment(2, 6, 1, 2);
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -288,9 +286,9 @@ public class ScheduleTest {
 
     @Test
     public void testGetTaskDescription() {
-        
+
         Treatment treatment1 = new Treatment(2, 6, 1, 2);
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -301,9 +299,9 @@ public class ScheduleTest {
 
     @Test
     public void testGetTaskDuration() {
-        
+
         Treatment treatment1 = new Treatment(2, 6, 1, 2);
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -314,9 +312,9 @@ public class ScheduleTest {
 
     @Test
     public void testGetTaskMaxTimeVariation() {
-        
+
         Treatment treatment1 = new Treatment(2, 6, 1, 2);
-        Task task1 = new Task(1,2,3,"feeding");
+        Task task1 = new Task(1, 2, 3, "feeding");
 
         ScheduleItem item1 = new ScheduleItem(treatment1);
         ScheduleItem item2 = new ScheduleItem(task1);
@@ -324,6 +322,5 @@ public class ScheduleTest {
         item1.getTaskMaxTimeVariation();
         assertEquals("TaskMaxTimeVariation was incorrect: ", expResult, result);
     }
-
 
 }
