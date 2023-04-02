@@ -68,4 +68,22 @@ public enum Species{
 				return 0;
 		}
 	}
+
+		public String getType(){
+			switch(this){
+				case COYOTE:
+					return "CREPUSCULAR";	
+				case FOX:
+					return "NOCTURNAL";
+				case PORCUPINE:
+					return "CREPUSCULAR";
+				case BEAVER:
+					return "DIURNAL";
+				case RACCOON:
+					return "NOCTURNAL";
+				default:
+					return null;
+			}
+
+	}
 }
