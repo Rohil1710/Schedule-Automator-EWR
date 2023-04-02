@@ -7,14 +7,12 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
 public class Main {
     public static void main(String[] args) {
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
-
 
             // Query the database and create ScheduleItem objects
             String query = "SELECT TREATMENTS.TreatmentID, TREATMENTS.AnimalID, TREATMENTS.TaskID, TREATMENTS.StartHour, TASKS.MaxWindow, TASKS.Duration, TASKS.Description FROM TREATMENTS INNER JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID";
@@ -31,15 +29,18 @@ public class Main {
                 int duration = resultSet.getInt("Duration");
                 String description = resultSet.getString("Description");
 
-                ScheduleItem item = new ScheduleItem(treatmentID, animalID, taskID, startHour, maxWindow, duration, description);
+                ScheduleItem item = new ScheduleItem(treatmentID, animalID, taskID, startHour, maxWindow, duration,
+                        description);
                 scheduleItems.add(item);
             }
 
             // Print the schedule items
             for (ScheduleItem item : scheduleItems) {
-                System.out.println("Treatment ID: " + item.getTreatmentID() + ", Animal ID: " + item.getAnimalID() + ", Task ID: " + item.getTaskID() + ", Start Hour: " + item.getStartHour() + ", Max Window: " + item.getMaxWindow() + ", Duration: " + item.getDuration() + ", Description: " + item.getDescription());
+                System.out.println("Treatment ID: " + item.getTreatmentID() + ", Animal ID: " + item.getAnimalID()
+                        + ", Task ID: " + item.getTaskID() + ", Start Hour: " + item.getStartHour() + ", Max Window: "
+                        + item.getMaxWindow() + ", Duration: " + item.getDuration() + ", Description: "
+                        + item.getDescription());
             }
-
 
             // Query ANIMALS table and create Animal objects
             ArrayList<Animal> animals = new ArrayList<>();
@@ -50,7 +51,7 @@ public class Main {
                 String animalSpecies = rs.getString("AnimalSpecies");
 
                 // Assuming all animals are not orphans and don't need treatment for simplicity
-                Animal animal = new Animal(animalID, animalSpecies, animalNickname, animalSpecies, false, false);
+                Animal animal = new Animal(animalID, animalSpecies, animalNickname);
                 animals.add(animal);
             }
 
@@ -60,8 +61,8 @@ public class Main {
                 System.out.println("Nickname: " + animal.getNickName());
                 System.out.println("Species: " + animal.getSpecies());
                 System.out.println("Type: " + animal.getType());
-                System.out.println("Orphan: " + animal.getOrphan());
-                System.out.println("Need Treatment: " + animal.getNeedTreatment());
+                // System.out.println("Orphan: " + animal.getOrphan());
+                // System.out.println("Need Treatment: " + animal.getNeedTreatment());
                 System.out.println();
             }
 
@@ -69,6 +70,6 @@ public class Main {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        
+
     }
 }

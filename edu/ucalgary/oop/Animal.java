@@ -1,16 +1,18 @@
 package edu.ucalgary.oop;
 
+import java.util.*;
+
 public class Animal {
     private String species;
     private String type;
-    // private ArrayList<int> feedingTimes = new ArrayList<>();
-    private int foodPrepDuration;
-    private int feedingDuratoin;
-    private int caseCleanDuration;
+    private ArrayList<Integer> feedingTimes = new ArrayList<Integer>();
+    // private int foodPrepDuration;
+    // private int feedingDuratoin;
+    // private int caseCleanDuration;
     private String nickName;
     private int animalID;
     // private boolean orphan;
-    private boolean needTreatment;
+    // private boolean needTreatment;
 
     // public Animal(int id, String typ, String animalNickName, String
     // animalSpecies, boolean orph, boolean treatment) {
@@ -22,16 +24,17 @@ public class Animal {
     // this.needTreatment = treatment;
     // }
 
-    public Animal(int id, String animalNickName, String animalSpecies, boolean treatment) {
+    public Animal(int id, String animalNickName, String animalSpecies) {
         this.animalID = id;
         this.nickName = animalNickName;
-        this.species = animalSpecies;
-        this.needTreatment = treatment;
+        this.species = animalSpecies.toUpperCase();
+        // this.needTreatment = treatment;
         // this.type = typ;
         Species speciess;
         // Directions direct;
         try {
             speciess = Species.valueOf(this.species);
+
             // formattedMovement = formattedMovement + act.toString();
             try {
                 this.type = speciess.getType();
@@ -58,17 +61,17 @@ public class Animal {
     // return
     // }
 
-    public int getFoodPrepDuration() {
-        return this.foodPrepDuration;
-    }
+    // public int getFoodPrepDuration() {
+    // return this.foodPrepDuration;
+    // }
 
-    public int getFeedingDuration() {
-        return this.feedingDuratoin;
-    }
+    // public int getFeedingDuration() {
+    // return this.feedingDuratoin;
+    // }
 
-    public int getCageCleanDuration() {
-        return this.caseCleanDuration;
-    }
+    // public int getCageCleanDuration() {
+    // return this.caseCleanDuration;
+    // }
 
     public String getNickName() {
         return this.nickName;
@@ -82,7 +85,7 @@ public class Animal {
     // return this.orphan;
     // }
 
-    public boolean getNeedTreatment() {
-        return this.needTreatment;
-    }
+    // public boolean getNeedTreatment() {
+    // return this.needTreatment;
+    // }
 }
