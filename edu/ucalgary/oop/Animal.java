@@ -9,16 +9,41 @@ public class Animal {
     private int caseCleanDuration;
     private String nickName;
     private int animalID;
-    private boolean orphan;
+    // private boolean orphan;
     private boolean needTreatment;
 
-    public Animal(int id, String typ, String animalNickName, String animalSpecies, boolean orph, boolean treatment) {
+    // public Animal(int id, String typ, String animalNickName, String
+    // animalSpecies, boolean orph, boolean treatment) {
+    // this.animalID = id;
+    // this.type = typ;
+    // this.nickName = animalNickName;
+    // this.species = animalSpecies;
+    // this.orphan = orph;
+    // this.needTreatment = treatment;
+    // }
+
+    public Animal(int id, String animalNickName, String animalSpecies, boolean treatment) {
         this.animalID = id;
-        this.type = typ;
         this.nickName = animalNickName;
         this.species = animalSpecies;
-        this.orphan = orph;
         this.needTreatment = treatment;
+        // this.type = typ;
+        Species speciess;
+        // Directions direct;
+        try {
+            speciess = Species.valueOf(this.species);
+            // formattedMovement = formattedMovement + act.toString();
+            try {
+                this.type = speciess.getType();
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Error: Invalid Species found.");
+            }
+        } catch (
+
+        IllegalArgumentException e) {
+            throw new IllegalArgumentException("Error: Invalid Type found.");
+        }
+
     }
 
     public String getSpecies() {
@@ -53,9 +78,9 @@ public class Animal {
         return this.animalID;
     }
 
-    public boolean getOrphan() {
-        return this.orphan;
-    }
+    // public boolean getOrphan() {
+    // return this.orphan;
+    // }
 
     public boolean getNeedTreatment() {
         return this.needTreatment;
