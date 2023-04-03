@@ -28,6 +28,9 @@ public class runSchedule {
 
             System.out.println("\nTEST AVAILABLE TIMES:");
             System.out.println(Arrays.toString(schedule.getAvailableTimes()));
+
+            System.out.println("\nTEST VOLUNTEER NEEDED:");
+            System.out.println(Arrays.toString(schedule.getVolunteerNeeded()));
         }
 
         catch(DatabaseConnectionException e){
