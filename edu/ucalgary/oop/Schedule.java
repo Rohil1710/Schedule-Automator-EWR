@@ -6,10 +6,14 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 
 public class Schedule {
-    private int[] availableTimes;
-    private boolean[] volunteerNeeded;
-    private Animal[] animals;
-    private ArrayList<ScheduleItem>[] schedule;
+    private int[] availableTimes = new int[23];
+    private boolean[] volunteerNeeded = new boolean[23];
+    private ArrayList<Animal> animals;
+    private ArrayList<ScheduleItem>[] schedule = new ArrayList[23]; 
+
+    
+
 }
