@@ -38,7 +38,7 @@ public class Schedule {
         }
     
         catch (Exception e) {
-            throw new DatabaseConnectionException("Could not connect to database.");
+            System.out.println(e.getMessage());
             //e.printStackTrace();
         }
 
