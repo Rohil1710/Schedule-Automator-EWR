@@ -35,7 +35,7 @@ public class Schedule {
 
     }
 
-    public void retrieveAnimals(){
+    public void retrieveAnimals() throws DatabaseConnectionException{
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
@@ -45,7 +45,6 @@ public class Schedule {
                 String animalNickname = rs.getString("AnimalNickname");
                 String animalSpecies = rs.getString("AnimalSpecies");
 
-                // Assuming all animals are not orphans and don't need treatment for simplicity
                 Animal animal = new Animal(animalID, animalNickname, animalSpecies);
                 this.animals.add(animal);
             }
@@ -55,6 +54,11 @@ public class Schedule {
         catch(SQLException e){
             e.printStackTrace();
         }
+
+        catch(Exception e){
+            throw new DatabaseConnectionException("Connection Error");
+        }
+
 
     }
 
