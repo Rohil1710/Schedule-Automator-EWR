@@ -35,6 +35,7 @@ public class Schedule {
             ResultSet resultSet = statement.executeQuery(query);
             connection.close();
             return resultSet;
+
         }
     
         catch (Exception e) {
@@ -70,7 +71,7 @@ public class Schedule {
 
     public void retrieveTreatments(){
         try{
-            ResultSet rs = queryDatabase("SELECT * FROM EWR.ANIMALS;");
+            ResultSet rs = queryDatabase("SELECT * FROM EWR.TREATMENTS;");
             while (rs.next()) {
                 int treatmentID = rs.getInt("TreatmentID");
                 int animalID = rs.getInt("AnimalID");
