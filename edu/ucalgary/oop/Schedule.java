@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.*;
 
+// CONSTRUCTOR - retrieves all required data from database and initializes data members to create the schedule.
+
 public class Schedule {
     private int[] availableTimes = new int[23];
     private boolean[] volunteerNeeded = new boolean[23];
@@ -56,8 +58,30 @@ public class Schedule {
 
     }
 
+
+// GETTERS:
+
     public ArrayList<Animal> getAnimals(){
         return this.animals;
     }
+
+    public ArrayList<Animal> getTreatmentItems(){
+        return this.animals;
+    }
+
+    public ArrayList<Animal> getTaskItems(){
+        return this.animals;
+    }
+
+    public int[] getAvailableTimes(){
+        return this.availableTimes;
+    }
+    
+    public boolean[] getVolunteerNeeded(){
+        return this.volunteerNeeded;
+    }
+
+// Formats the schedule into a single string, creates a .txt file and outputs string version of schedule to terminal.
+//public void formatSchedule(){}
 
 }
