@@ -3,6 +3,7 @@ package edu.ucalgary.oop;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
@@ -18,6 +19,7 @@ public class Schedule {
 
 
     public Schedule(){
+        retrieveAnimals();
 
     }
 
@@ -37,6 +39,30 @@ public class Schedule {
         catch (Exception e) {
             throw new DatabaseConnectionException("Could not connect to database.");
             //e.printStackTrace();
+        }
+
+    }
+
+    public void retrieveAnimals(){
+        try{
+            ResultSet rs = queryDatabase("SELECT * FROM EWR.ANIMALS;");
+            while (rs.next()) {
+                int animalID = rs.getInt("AnimalID");
+                String animalNickname = rs.getString("AnimalNickname");
+                String animalSpecies = rs.getString("AnimalSpecies");
+
+                // Assuming all animals are not orphans and don't need treatment for simplicity
+                Animal animal = new Animal(animalID, animalNickname, animalSpecies);
+                this.animals.add(animal);
+            }
+        }
+        
+        catch(DatabaseConnectionException e){
+            e.printStackTrace();
+        }
+
+        catch(SQLException e){
+            e.printStackTrace();
         }
 
     }
