@@ -18,13 +18,7 @@ public class Schedule {
     private ArrayList<ScheduleItem> taskItems;
 
 
-    public Schedule(){
-        retrieveAnimals();
-        retrieveTreatments();
-
-    }
-
-    public ResultSet queryDatabase(String query) throws DatabaseConnectionException{
+    public Schedule() throws DatabaseConnectionException {
 
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
@@ -32,9 +26,9 @@ public class Schedule {
 
             // Query the database and create ScheduleItem objects
             // String query = "SELECT TREATMENTS.TreatmentID, TREATMENTS.AnimalID, TREATMENTS.TaskID, TREATMENTS.StartHour, TASKS.MaxWindow, TASKS.Duration, TASKS.Description FROM TREATMENTS INNER JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID";
-            ResultSet resultSet = statement.executeQuery(query);
+            retrieveAnimals(statement);
+            retrieveTreatments(statement);
             connection.close();
-            return resultSet;
 
         }
     
@@ -45,9 +39,9 @@ public class Schedule {
 
     }
 
-    public void retrieveAnimals(){
+    public void retrieveAnimals(Statement statement){
         try{
-            ResultSet rs = queryDatabase("SELECT * FROM EWR.ANIMALS;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
             while (rs.next()) {
                 int animalID = rs.getInt("AnimalID");
                 String animalNickname = rs.getString("AnimalNickname");
@@ -58,10 +52,6 @@ public class Schedule {
                 this.animals.add(animal);
             }
         }
-        
-        catch(DatabaseConnectionException e){
-            e.printStackTrace();
-        }
 
         catch(SQLException e){
             e.printStackTrace();
@@ -69,9 +59,9 @@ public class Schedule {
 
     }
 
-    public void retrieveTreatments(){
+    public void retrieveTreatments(Statement statement){
         try{
-            ResultSet rs = queryDatabase("SELECT * FROM EWR.TREATMENTS;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
             while (rs.next()) {
                 int treatmentID = rs.getInt("TreatmentID");
                 int animalID = rs.getInt("AnimalID");
@@ -85,10 +75,6 @@ public class Schedule {
                         description);
                 this.treatmentItems.add(item);
             }
-        }
-        
-        catch(DatabaseConnectionException e){
-            e.printStackTrace();
         }
 
         catch(SQLException e){
