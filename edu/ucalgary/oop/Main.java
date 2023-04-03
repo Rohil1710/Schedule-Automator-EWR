@@ -51,7 +51,7 @@ public class Main {
                 String animalSpecies = rs.getString("AnimalSpecies");
 
                 // Assuming all animals are not orphans and don't need treatment for simplicity
-                Animal animal = new Animal(animalID, animalSpecies, animalNickname);
+                Animal animal = new Animal(animalID, animalNickname, animalSpecies);
                 animals.add(animal);
             }
 
