@@ -20,6 +20,7 @@ public class Schedule {
 
     public Schedule(){
         retrieveAnimals();
+        retrieveTreatments();
 
     }
 
@@ -66,4 +67,37 @@ public class Schedule {
         }
 
     }
+
+    public void retrieveTreatments(){
+        try{
+            ResultSet rs = queryDatabase("SELECT * FROM EWR.ANIMALS;");
+            while (rs.next()) {
+                int treatmentID = rs.getInt("TreatmentID");
+                int animalID = rs.getInt("AnimalID");
+                int taskID = rs.getInt("TaskID");
+                int startHour = rs.getInt("StartHour");
+                int maxWindow = rs.getInt("MaxWindow");
+                int duration = rs.getInt("Duration");
+                String description = rs.getString("Description");
+
+                ScheduleItem item = new ScheduleItem(treatmentID, animalID, taskID, startHour, maxWindow, duration,
+                        description);
+                this.treatmentItems.add(item);
+            }
+        }
+        
+        catch(DatabaseConnectionException e){
+            e.printStackTrace();
+        }
+
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+
+    }
+
+    public ArrayList<Animal> getAnimals(){
+        return this.animals;
+    }
+
 }
