@@ -61,7 +61,7 @@ public class Schedule {
     public void retrieveTreatments(Statement statement) {
         try{
             
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM EWR.TREATMENTS;");
+            ResultSet resultSet = statement.executeQuery("SELECT TREATMENTS.TreatmentID, TREATMENTS.AnimalID, TREATMENTS.TaskID, TREATMENTS.StartHour, TASKS.MaxWindow, TASKS.Duration, TASKS.Description FROM TREATMENTS INNER JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID;");
             while (resultSet.next()) {
                 int treatmentID = resultSet.getInt("TreatmentID");
                 int animalID = resultSet.getInt("AnimalID");
