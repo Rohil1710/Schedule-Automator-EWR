@@ -17,14 +17,14 @@ public class Schedule {
     private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
     private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
     
-    // CONSTRUCTOR - retrieves all required data from database and initializes data members to create the schedule.
+    // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
     public Schedule() throws DatabaseConnectionException {
     
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
-            //retrieveTreatments();
+            retrieveTreatments(statement);
             connection.close();
     
         }
@@ -57,6 +57,31 @@ public class Schedule {
         }
     
     }
+
+    public void retrieveTreatments(Statement statement) {
+        try{
+            
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM EWR.TREATMENTS;");
+            while (resultSet.next()) {
+                int treatmentID = resultSet.getInt("TreatmentID");
+                int animalID = resultSet.getInt("AnimalID");
+                int taskID = resultSet.getInt("TaskID");
+                int startHour = resultSet.getInt("StartHour");
+                int maxWindow = resultSet.getInt("MaxWindow");
+                int duration = resultSet.getInt("Duration");
+                String description = resultSet.getString("Description");
+
+                ScheduleItem item = new ScheduleItem(treatmentID, animalID, taskID, startHour, maxWindow, duration,
+                        description);
+                this.treatmentItems.add(item);
+            }
+        }
+    
+        catch(SQLException e){
+            e.printStackTrace();
+        }
+    
+    }
     
     
     // GETTERS:
@@ -65,12 +90,12 @@ public class Schedule {
         return this.animals;
     }
     
-    public ArrayList<Animal> getTreatmentItems(){
-        return this.animals;
+    public ArrayList<ScheduleItem> getTreatmentItems(){
+        return this.treatmentItems;
     }
     
-    public ArrayList<Animal> getTaskItems(){
-        return this.animals;
+    public ArrayList<ScheduleItem> getTaskItems(){
+        return this.taskItems;
     }
     
     public int[] getAvailableTimes(){

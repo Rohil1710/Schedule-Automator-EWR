@@ -4,7 +4,8 @@ public class runSchedule {
     public static void main(String[] args) {
         try{
             Schedule schedule = new Schedule();
-            
+
+            System.out.println("\nTEST ANIMALS:");
             for (Animal animal : schedule.getAnimals()) {
                 System.out.println("Animal ID: " + animal.getAnimalID());
                 System.out.println("Nickname: " + animal.getNickName());
@@ -13,6 +14,14 @@ public class runSchedule {
                 // System.out.println("Orphan: " + animal.getOrphan());
                 // System.out.println("Need Treatment: " + animal.getNeedTreatment());
                 System.out.println();
+            }
+
+            System.out.println("\nTEST TREATMENTS:");
+            for (ScheduleItem item : schedule.getTreatmentItems()) {
+                System.out.println("Treatment ID: " + item.getTreatmentID() + ", Animal ID: " + item.getAnimalID()
+                        + ", Task ID: " + item.getTaskID() + ", Start Hour: " + item.getStartHour() + ", Max Window: "
+                        + item.getMaxWindow() + ", Duration: " + item.getDuration() + ", Description: "
+                        + item.getDescription());
             }
         }
 
