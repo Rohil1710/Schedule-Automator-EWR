@@ -25,6 +25,7 @@ public class Schedule {
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
+            assignTreatments();
             //generateTasks();
             connection.close();
     
@@ -84,6 +85,20 @@ public class Schedule {
             e.printStackTrace();
         }
     
+    }
+
+    public void assignTreatments(){
+        System.out.println("Still working on it...");
+        for(ScheduleItem item : this.treatmentItems){
+            int startHour = item.getStartHour();
+            int duration = item.getDuration();
+            int maxWindow = item.getMaxWindow();
+            if (this.availableTimes[startHour] > duration){
+                this.schedule[startHour].add(item);
+                this.availableTimes[startHour] = this.availableTimes[startHour] - duration;
+            }
+            
+        }
     }
 
     //public generateTasks(){
