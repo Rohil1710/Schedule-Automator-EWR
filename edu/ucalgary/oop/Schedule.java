@@ -12,7 +12,7 @@ import java.util.*;
 public class Schedule {
     private int[] availableTimes = new int[23];
     private boolean[] volunteerNeeded = new boolean[23];
-    private ArrayList<Animal> animals;
+    private ArrayList<Animal> animals = new ArrayList<Animal>();
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[23]; 
     private ArrayList<ScheduleItem> treatmentItems;
     private ArrayList<ScheduleItem> taskItems;
