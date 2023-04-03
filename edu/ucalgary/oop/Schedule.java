@@ -56,7 +56,7 @@ public class Schedule {
 
     }
 
-    public ArrayList<Animal> getAnimal(){
+    public ArrayList<Animal> getAnimals(){
         return this.animals;
     }
 
