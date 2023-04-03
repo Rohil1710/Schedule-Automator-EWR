@@ -14,8 +14,8 @@ public class Schedule {
     private boolean[] volunteerNeeded = new boolean[23];
     private ArrayList<Animal> animals = new ArrayList<Animal>();
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[23]; 
-    private ArrayList<ScheduleItem> treatmentItems;
-    private ArrayList<ScheduleItem> taskItems;
+    private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
+    private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
 
 
     public Schedule() throws DatabaseConnectionException {
