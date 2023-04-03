@@ -21,14 +21,8 @@ public class Schedule {
     public Schedule() throws DatabaseConnectionException {
 
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
-            Statement statement = connection.createStatement();
-
-            // Query the database and create ScheduleItem objects
-            // String query = "SELECT TREATMENTS.TreatmentID, TREATMENTS.AnimalID, TREATMENTS.TaskID, TREATMENTS.StartHour, TASKS.MaxWindow, TASKS.Duration, TASKS.Description FROM TREATMENTS INNER JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID";
-            retrieveAnimals(statement);
-            retrieveTreatments(statement);
-            connection.close();
+            retrieveAnimals();
+            //retrieveTreatments();
 
         }
 
@@ -44,8 +38,10 @@ public class Schedule {
 
     }
 
-    public void retrieveAnimals(Statement statement){
+    public void retrieveAnimals(){
         try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
+            Statement statement = connection.createStatement();
             ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
             while (rs.next()) {
                 int animalID = rs.getInt("AnimalID");
@@ -56,6 +52,7 @@ public class Schedule {
                 Animal animal = new Animal(animalID, animalNickname, animalSpecies);
                 this.animals.add(animal);
             }
+            connection.close();
         }
 
         catch(SQLException e){
@@ -64,7 +61,7 @@ public class Schedule {
 
     }
 
-    public void retrieveTreatments(Statement statement){
+    public void retrieveTreatments(){
         try{
             ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
             while (rs.next()) {
