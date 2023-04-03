@@ -1,5 +1,7 @@
 package edu.ucalgary.oop;
 
+import java.util.*;   
+
 public class runSchedule {
     public static void main(String[] args) {
         try{
@@ -23,6 +25,9 @@ public class runSchedule {
                         + item.getMaxWindow() + ", Duration: " + item.getDuration() + ", Description: "
                         + item.getDescription());
             }
+
+            System.out.println("\nTEST AVAILABLE TIMES:");
+            System.out.println(Arrays.toString(schedule.getAvailableTimes()));
         }
 
         catch(DatabaseConnectionException e){

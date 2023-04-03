@@ -25,6 +25,7 @@ public class Schedule {
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
+            //generateTasks();
             connection.close();
     
         }
@@ -34,6 +35,8 @@ public class Schedule {
             throw new DatabaseConnectionException("Database Error");
             //e.printStackTrace();
         }
+
+        Arrays.fill(this.availableTimes, 59);
     
     }
     
@@ -82,6 +85,12 @@ public class Schedule {
         }
     
     }
+
+    //public generateTasks(){
+        
+    //}
+
+    
     
     
     // GETTERS:
