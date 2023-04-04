@@ -27,7 +27,11 @@ public class runSchedule {
             }
 
             System.out.println("\nTEST AVAILABLE TIMES:");
-            System.out.println(Arrays.toString(schedule.getAvailableTimes()));
+            int[] times = new int[24];
+            times = schedule.getAvailableTimes();
+            for (int i = 0; i < 24; i++){
+                System.out.println("\nTime: "+ i +"     Available Minutes: " + times[i]);
+            }
 
             System.out.println("\nTEST VOLUNTEER NEEDED:");
             System.out.println(Arrays.toString(schedule.getVolunteerNeeded()));
