@@ -27,7 +27,7 @@ public class Schedule {
             retrieveTreatments(statement);
             connection.close();
 
-            Arrays.fill(this.availableTimes, 59);
+            Arrays.fill(this.availableTimes, 60);
             for (int i = 0; i < 24; i++){
                 this.schedule[i] = new ArrayList<ScheduleItem>();
             }
@@ -114,7 +114,7 @@ public class Schedule {
                 assignHour = startHour;
                 for(int n = 0; n < maxWindow; n++){
                     if (this.volunteerNeeded[assignHour] == false){
-                        this.availableTimes[assignHour] += 59;
+                        this.availableTimes[assignHour] += 60;
                         this.schedule[assignHour].add(item);
                         this.availableTimes[assignHour] = this.availableTimes[startHour] - duration;
                         this.volunteerNeeded[assignHour] = true;
