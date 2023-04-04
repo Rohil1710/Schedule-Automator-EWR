@@ -23,12 +23,17 @@ public class Schedule {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
-            Arrays.fill(this.availableTimes, 59);
             retrieveAnimals(statement);
             retrieveTreatments(statement);
+            connection.close();
+
+            Arrays.fill(this.availableTimes, 59);
+            for (int i = 0; i < 24; i++){
+                this.schedule[i] = new ArrayList<ScheduleItem>();
+            }
             assignTreatments();
             //generateTasks();
-            connection.close();
+            
     
         }
         
