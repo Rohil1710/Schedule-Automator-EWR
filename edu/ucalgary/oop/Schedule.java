@@ -21,7 +21,7 @@ public class Schedule {
     public Schedule() throws DatabaseConnectionException {
     
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
