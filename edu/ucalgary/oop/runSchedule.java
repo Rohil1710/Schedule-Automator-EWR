@@ -38,11 +38,11 @@ public class runSchedule {
             for (int i = 0; i < 24; i++){
                 currentSchedule[i] = new ArrayList<ScheduleItem>();
                 currentSchedule[i] = schedule.getHourSchedule(i);
-                System.out.println("Time: "+ i);
+                System.out.println("\nTime: "+ i);
                 for (ScheduleItem item : currentSchedule[i]) {
-                    System.out.println("Treatment ID: " + item.getTreatmentID() + "\nAnimal ID: " + item.getAnimalID()
-                            + "\nTask ID: " + item.getTaskID() + "\nStart Hour: " + item.getStartHour() + "\nMax Window: "
-                            + item.getMaxWindow() + "\nDuration: " + item.getDuration() + "\nDescription: "
+                    System.out.println("\n\tTreatment ID: " + item.getTreatmentID() + "\n\tAnimal ID: " + item.getAnimalID()
+                            + "\n\tTask ID: " + item.getTaskID() + "\n\tStart Hour: " + item.getStartHour() + "\n\tMax Window: "
+                            + item.getMaxWindow() + "\n\tDuration: " + item.getDuration() + "\n\tDescription: "
                             + item.getDescription());
                 }
                 
