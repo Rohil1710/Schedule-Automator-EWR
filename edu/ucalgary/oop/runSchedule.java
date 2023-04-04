@@ -31,6 +31,18 @@ public class runSchedule {
 
             System.out.println("\nTEST VOLUNTEER NEEDED:");
             System.out.println(Arrays.toString(schedule.getVolunteerNeeded()));
+
+            System.out.println("\nTEST TREATMENTS PER HOUR:");
+
+            ArrayList<ScheduleItem>[] currentSchedule = new ArrayList[24]; 
+            for (int i = 0; i < 24; i++){
+                currentSchedule[i] = new ArrayList<ScheduleItem>();
+                currentSchedule[i] = schedule.getHourSchedule(i);
+                System.out.println("Time: "+ i);
+                System.out.println("Task: \n"+ currentSchedule[i]);
+                
+            }
+            
         }
 
         catch(DatabaseConnectionException e){
