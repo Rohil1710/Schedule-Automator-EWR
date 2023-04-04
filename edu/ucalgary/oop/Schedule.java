@@ -107,7 +107,6 @@ public class Schedule {
                     assignCheck = true;
                     break;
                 }
-                
                 assignHour++;
             }
 
@@ -157,6 +156,10 @@ public class Schedule {
         
     public boolean[] getVolunteerNeeded(){
         return this.volunteerNeeded;
+    }
+
+    public ArrayList<ScheduleItem> getHourSchedule(int hour){
+        return this.schedule[hour];
     }
     
 // Formats the schedule into a single string, creates a .txt file and outputs string version of schedule to terminal.
