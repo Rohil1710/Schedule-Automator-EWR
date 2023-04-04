@@ -23,6 +23,7 @@ public class Schedule {
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
+            Arrays.fill(this.availableTimes, 59);
             retrieveAnimals(statement);
             retrieveTreatments(statement);
             assignTreatments();
@@ -36,8 +37,6 @@ public class Schedule {
             throw new DatabaseConnectionException("Database Error");
             //e.printStackTrace();
         }
-
-        Arrays.fill(this.availableTimes, 59);
     
     }
     
