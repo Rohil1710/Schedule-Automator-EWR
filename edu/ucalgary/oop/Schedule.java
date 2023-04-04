@@ -131,7 +131,7 @@ public class Schedule {
                 }
             }
 
-            if (assignCheck == false){
+            else if (assignCheck == false){
                 throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.");
             }
             
