@@ -116,7 +116,7 @@ public class Schedule {
                     if (this.volunteerNeeded[assignHour] == false){
                         this.availableTimes[assignHour] += 60;
                         this.schedule[assignHour].add(item);
-                        this.availableTimes[assignHour] = this.availableTimes[startHour] - duration;
+                        this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
                         this.volunteerNeeded[assignHour] = true;
                         assignCheck = true;
                         break;
