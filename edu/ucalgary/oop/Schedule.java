@@ -110,8 +110,8 @@ public class Schedule {
                 assignHour++;
             }
 
+            assignHour = startHour;
             if (assignCheck == false){
-                assignHour = startHour;
                 for(int n = 0; n < maxWindow; n++){
                     if (this.volunteerNeeded[assignHour] == false){
                         this.availableTimes[assignHour] += 60;
