@@ -31,7 +31,12 @@ public class Schedule {
             for (int i = 0; i < 24; i++){
                 this.schedule[i] = new ArrayList<ScheduleItem>();
             }
-            assignTreatments();
+            try{
+                assignTreatments();
+            }
+            catch(TimeLimitExceededException e){
+                System.out.println(e.getMessage());
+            }
             //generateTasks();
             
     
@@ -91,7 +96,7 @@ public class Schedule {
     
     }
 
-    public void assignTreatments(){
+    public void assignTreatments() throws TimeLimitExceededException {
         //System.out.println("Still working on it...");
         for(ScheduleItem item : this.treatmentItems){
             int startHour = item.getStartHour();
@@ -125,9 +130,14 @@ public class Schedule {
 
                 }
             }
+
+            if (assignCheck == false){
+                throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.")
+            }
             
         }
     }
+
 
     //public generateTasks(){
         
