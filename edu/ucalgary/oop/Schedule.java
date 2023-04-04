@@ -92,14 +92,39 @@ public class Schedule {
     }
 
     public void assignTreatments(){
-        System.out.println("Still working on it...");
+        //System.out.println("Still working on it...");
         for(ScheduleItem item : this.treatmentItems){
             int startHour = item.getStartHour();
             int duration = item.getDuration();
             int maxWindow = item.getMaxWindow();
-            if (this.availableTimes[startHour] > duration){
-                this.schedule[startHour].add(item);
-                this.availableTimes[startHour] = this.availableTimes[startHour] - duration;
+            boolean assignCheck = false;
+
+            int assignHour = startHour;
+            for (int n = 0; n < maxWindow; n++){
+                if (this.availableTimes[assignHour] > duration){
+                    this.schedule[assignHour].add(item);
+                    this.availableTimes[assignHour] = this.availableTimes[startHour] - duration;
+                    assignCheck = true;
+                    break;
+                }
+                
+                assignHour++;
+            }
+
+            if (assignCheck == false){
+                assignHour = startHour;
+                for(int n = 0; n < maxWindow; n++){
+                    if (this.volunteerNeeded[assignHour] == false){
+                        this.availableTimes[assignHour] += 59;
+                        this.schedule[assignHour].add(item);
+                        this.availableTimes[assignHour] = this.availableTimes[startHour] - duration;
+                        this.volunteerNeeded[assignHour] = true;
+                        assignCheck = true;
+                        break;
+                    }
+                    assignHour++;
+
+                }
             }
             
         }
