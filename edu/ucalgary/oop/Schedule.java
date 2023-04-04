@@ -97,7 +97,6 @@ public class Schedule {
     }
 
     public void assignTreatments() throws TimeLimitExceededException {
-        //System.out.println("Still working on it...");
         for(ScheduleItem item : this.treatmentItems){
             int startHour = item.getStartHour();
             int duration = item.getDuration();
@@ -105,8 +104,8 @@ public class Schedule {
             boolean assignCheck = false;
 
             int assignHour = startHour;
-            for (int n = 0; n < maxWindow; n++){
-                if (this.availableTimes[assignHour] > duration){
+            for (int n = 0; n <= maxWindow; n++){
+                if (this.availableTimes[assignHour] >= duration){
                     this.schedule[assignHour].add(item);
                     this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
                     assignCheck = true;
@@ -117,7 +116,7 @@ public class Schedule {
 
             assignHour = startHour;
             if (assignCheck == false){
-                for(int n = 0; n < maxWindow; n++){
+                for(int n = 0; n <= maxWindow; n++){
                     if (this.volunteerNeeded[assignHour] == false){
                         this.availableTimes[assignHour] += 60;
                         this.schedule[assignHour].add(item);
@@ -131,7 +130,7 @@ public class Schedule {
                 }
             }
 
-            else if (assignCheck == false){
+            if (assignCheck == false){
                 throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.");
             }
             
