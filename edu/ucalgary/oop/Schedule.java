@@ -103,7 +103,7 @@ public class Schedule {
             for (int n = 0; n < maxWindow; n++){
                 if (this.availableTimes[assignHour] > duration){
                     this.schedule[assignHour].add(item);
-                    this.availableTimes[assignHour] = this.availableTimes[startHour] - duration;
+                    this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
                     assignCheck = true;
                     break;
                 }
