@@ -104,7 +104,7 @@ public class Schedule {
             boolean assignCheck = false;
 
             int assignHour = startHour;
-            for (int n = 0; n <= maxWindow; n++){
+            for (int n = 0; n < maxWindow; n++){
                 if (this.availableTimes[assignHour] >= duration){
                     this.schedule[assignHour].add(item);
                     this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
@@ -116,7 +116,7 @@ public class Schedule {
 
             assignHour = startHour;
             if (assignCheck == false){
-                for(int n = 0; n <= maxWindow; n++){
+                for(int n = 0; n < maxWindow; n++){
                     if (this.volunteerNeeded[assignHour] == false){
                         this.availableTimes[assignHour] += 60;
                         this.schedule[assignHour].add(item);
