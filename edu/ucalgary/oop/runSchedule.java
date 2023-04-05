@@ -7,6 +7,7 @@ public class runSchedule {
         try{
             Schedule schedule = new Schedule();
 
+            /* 
             System.out.println("\nTEST ANIMALS:");
             for (Animal animal : schedule.getAnimals()) {
                 System.out.println("Animal ID: " + animal.getAnimalID());
@@ -50,7 +51,11 @@ public class runSchedule {
                             + item.getDescription());
                 }
                 
-            }
+            }*/
+
+            String formatted = new String();
+            formatted = schedule.formatSchedule();
+            System.out.println(formatted);
             
         }
 

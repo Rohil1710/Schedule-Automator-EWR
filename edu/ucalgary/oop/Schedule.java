@@ -5,9 +5,8 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.*;    
+import java.util.*; 
+import java.time.LocalDate;   
     
 public class Schedule {
     private int[] availableTimes = new int[24];
@@ -219,6 +218,31 @@ public class Schedule {
     }
     
 // Formats the schedule into a single string, creates a .txt file and outputs string version of schedule to terminal.
-    //public void formatSchedule(){}
+    public String formatSchedule(){
+        String formattedSchedule = new String();
+        LocalDate date = LocalDate.now();
+
+        date = date.plusDays(1);
+        formattedSchedule += "Schedule for " + date.toString() + "\n\n";
+        for (int i = 0; i < 24; i++){
+            if (schedule[i] != null){
+                formattedSchedule += Integer.toString(i)+":00";
+                if (this.volunteerNeeded[i] == true ){
+                    formattedSchedule += " [+ Back-Up Volunteer]";
+                }
+                formattedSchedule += "\n";
+                for (ScheduleItem item : this.schedule[i]){
+                    formattedSchedule += "* " + item.getDescription();
+                    for(Animal animal : this.animals){
+                        if (item.getAnimalID() == animal.getAnimalID()){
+                            formattedSchedule += "(" + animal.getNickName() + ")\n";
+                        }
+                    }
+                }
+            }
+        }
+
+        return formattedSchedule;
+    }
     
 }
