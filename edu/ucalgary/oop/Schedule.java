@@ -20,7 +20,7 @@ public class Schedule {
     public Schedule() throws DatabaseConnectionException {
     
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
@@ -38,7 +38,7 @@ public class Schedule {
                 System.exit(1);
             }
             
-            //generateTasks();
+            generateTasks();
 
             boolean needed = isVolunteerNeeded();
             if (needed == true){
@@ -144,9 +144,32 @@ public class Schedule {
     }
 
 
-    //public generateTasks(){
-        
-    //}
+    public void generateTasks(){
+        // Coyote tasks
+        taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean coyote cage"));
+
+        // Porcupine tasks
+        taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 10, "Feed and clean porcupine cage")); // Feed at 7 PM
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 10, "Clean porcupine cage"));
+
+        // Fox tasks
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 10, "Feed and clean fox cage")); // Feed at 12 AM
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean fox cage"));
+
+        // Raccoon tasks
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 5, "Feed and clean raccoon cage")); // Feed at 12 AM
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean raccoon cage"));
+
+        // Beaver tasks
+        taskItems.add(new ScheduleItem(0, 0, 0, 8, 3, 5, "Feed and clean beaver cage")); // Feed at 8 AM
+        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean beaver cage"));
+
+        // Print all tasks
+        for (ScheduleItem item : taskItems) {
+            System.out.println("Task ID: " + item.getTaskID() + ", Description: " + item.getDescription());
+        }
+    }
 
     public boolean isVolunteerNeeded(){
         boolean needed = false;
@@ -189,6 +212,8 @@ public class Schedule {
         System.out.println("\nBack-up volunteers confirmed.");
     
     }
+
+
     
     
     // GETTERS:
