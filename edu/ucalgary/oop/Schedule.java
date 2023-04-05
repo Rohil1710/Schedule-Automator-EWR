@@ -232,13 +232,14 @@ public class Schedule {
                 }
                 formattedSchedule += "\n";
                 for (ScheduleItem item : this.schedule[i]){
-                    formattedSchedule += "* " + item.getDescription();
+                    formattedSchedule += "\t* " + item.getDescription();
                     for(Animal animal : this.animals){
                         if (item.getAnimalID() == animal.getAnimalID()){
                             formattedSchedule += " (" + animal.getNickName() + ")\n";
                         }
                     }
                 }
+                formattedSchedule += "\n";
             }
         }
 
