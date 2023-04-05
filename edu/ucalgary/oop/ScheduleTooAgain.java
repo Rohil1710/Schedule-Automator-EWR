@@ -242,8 +242,8 @@ public class ScheduleTooAgain {
                 if (item.getAnimalID() == animal.getAnimalID()){
                     animalName = " (" + animal.getNickName() + ")";
                 }
-            System.out.println("\tTreatment ID: " + Integer.toString(item.getTreatmentID())+"\tDescription: " + item.getDescription()+ animalName);
             }
+            System.out.println("\tTreatment ID: " + Integer.toString(item.getTreatmentID())+"\tDescription: " + item.getDescription()+ animalName);
         }
         System.out.println("\nEnter the Treatment ID of the treatment to adjust:");
         System.out.println("\n***STILL UNDER CONSTRUCTION***");
