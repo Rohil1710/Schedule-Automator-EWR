@@ -247,7 +247,7 @@ public class ScheduleTooAgain {
         }
         System.out.println("\nEnter the Treatment ID of the treatment to adjust:");
 
-        int fixID;
+        int fixID = -1;
         boolean validInput = false;
         while(validInput == false){
             Scanner input = new Scanner(System.in);
@@ -256,7 +256,7 @@ public class ScheduleTooAgain {
                 String ID = new String(Integer.toString(item.getTreatmentID()));
                 if (ID.equals(line)){
                     validInput = true;
-                    FixID = item.getTreatmentID();
+                    fixID = item.getTreatmentID();
                 }
             if (validInput == false){
                 System.out.println("Invalid ID entered. Please re-enter.");
