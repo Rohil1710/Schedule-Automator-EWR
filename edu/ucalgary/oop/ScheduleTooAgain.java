@@ -149,7 +149,7 @@ public class ScheduleTooAgain {
             }
 
             if (assignCheck == false){
-                this.problemHour = assignHour;
+                this.problemHour = startHour;
                 throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.");
     
             }
