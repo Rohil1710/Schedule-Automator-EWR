@@ -246,6 +246,26 @@ public class ScheduleTooAgain {
             System.out.println("\tTreatment ID: " + Integer.toString(item.getTreatmentID())+"\tDescription: " + item.getDescription()+ animalName);
         }
         System.out.println("\nEnter the Treatment ID of the treatment to adjust:");
+
+        int fixID;
+        boolean validInput = false;
+        while(validInput == false){
+            Scanner input = new Scanner(System.in);
+            String line = input.nextLine();
+            for (ScheduleItem item : problemTreatments){
+                String ID = new String(Integer.toString(item.getTreatmentID()));
+                if (ID.equals(line)){
+                    validInput = true;
+                    FixID = item.getTreatmentID();
+                }
+            if (validInput == false){
+                System.out.println("Invalid ID entered. Please re-enter.");
+            }
+            }
+        }
+
+        System.out.println("Treatment ID entered: " + Integer.toString(fixID));
+
         System.out.println("\n***STILL UNDER CONSTRUCTION***");
     }
 
