@@ -47,7 +47,7 @@ public class ScheduleTooAgain {
                 catch(TimeLimitExceededException e){
                     //System.out.println(e.getMessage());
                     adjustDatabase(this.problemHour);
-                    buildCheck = true;  //Just to see what its doing so far
+                    //buildCheck = true;  //Just to see what its doing so far
                     //System.exit(1);
                 }
             }
