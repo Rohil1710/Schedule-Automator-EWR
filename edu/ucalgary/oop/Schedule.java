@@ -225,7 +225,7 @@ public class Schedule {
         date = date.plusDays(1);
         formattedSchedule += "Schedule for " + date.toString() + "\n\n";
         for (int i = 0; i < 24; i++){
-            if (schedule[i] != null){
+            if (schedule[i].isEmpty() != true){
                 formattedSchedule += Integer.toString(i)+":00";
                 if (this.volunteerNeeded[i] == true ){
                     formattedSchedule += " [+ Back-Up Volunteer]";
@@ -235,7 +235,7 @@ public class Schedule {
                     formattedSchedule += "* " + item.getDescription();
                     for(Animal animal : this.animals){
                         if (item.getAnimalID() == animal.getAnimalID()){
-                            formattedSchedule += "(" + animal.getNickName() + ")\n";
+                            formattedSchedule += " (" + animal.getNickName() + ")\n";
                         }
                     }
                 }
