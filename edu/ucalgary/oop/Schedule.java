@@ -6,7 +6,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.*; 
-import java.time.LocalDate;   
+import java.time.LocalDate;
+import java.io.*;   
     
 public class Schedule {
     private int[] availableTimes = new int[24];
@@ -268,7 +269,23 @@ public class Schedule {
             }
         }
 
+        this.saveToFile(formattedSchedule, date);
         return formattedSchedule;
     }
     
+
+public void saveToFile(String formattedSchedule, LocalDate date){
+    String fileName = "Schedule_" + date.toString() + ".txt";
+        try {
+            FileWriter output = new FileWriter(fileName);
+            BufferedWriter out = new BufferedWriter(output);
+            out.write(formattedSchedule);
+            out.close();
+            output.close();
+
+        }
+        catch(IOException e){
+            System.out.println("Could not save to text file.");
+        }
+    }
 }
