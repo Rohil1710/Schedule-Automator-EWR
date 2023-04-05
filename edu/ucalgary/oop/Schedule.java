@@ -143,7 +143,7 @@ public class Schedule {
         }
     }
 
-
+    //Tasks done everyday:
     public void generateTasks(){
         // Coyote tasks
         taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
