@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.*; 
 import java.time.LocalDate;
 import java.io.*;   
@@ -268,6 +269,41 @@ public class ScheduleTooAgain {
         }
 
         System.out.println("Treatment ID entered: " + Integer.toString(fixID));
+
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
+            String update = new String("UPDATE TREATMENTS SET StartHour = ? WHERE TreatmentID = ?;");
+            PreparedStatement prepardedStatement = connection.prepareStatement(update);
+            int newHour = -1;
+            boolean validHour = false;
+            while(validHour == false){
+                System.out.println("\nPlease enter the new start hour as an integer between 0 and 23:");
+                Scanner input = new Scanner(System.in);
+                String line = input.nextLine();
+                try{
+                    newHour = Integer.parseInt(line);
+                }
+                catch(Exception e){
+                    System.out.println("Invalid input. Please enter the time as an integer number.");
+                }
+
+                if(newHour >= 0 && newHour < 24){
+                    validHour = true;
+                } 
+            }
+            
+            preparedStatement.setInt(1, newHour);
+            preparedStatement.setInt(2, newHour);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close(); 
+            connection.close();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            //throw new DatabaseConnectionException("Database Error");
+            //e.printStackTrace();
+        }
 
         System.out.println("\n***STILL UNDER CONSTRUCTION***");
     }
