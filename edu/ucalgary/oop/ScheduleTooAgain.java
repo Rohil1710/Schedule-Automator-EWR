@@ -44,7 +44,7 @@ public class ScheduleTooAgain {
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
-                    System.out.println(e.getMessage());
+                    //System.out.println(e.getMessage());
                     adjustDatabase(13);
                     buildCheck = true;  //Just to see what its doing so far
                     //System.exit(1);
@@ -234,19 +234,19 @@ public class ScheduleTooAgain {
             }
         }
 
-        System.out.println("Too many tasks need to be scheduled for "+ Integer.toString(problemHour)+":00.");
-        System.out.println("Please consult the vetrenarian and change the start time for one of the following treatments:");
+        System.out.println("\nToo many tasks need to be scheduled for "+ Integer.toString(problemHour)+":00.");
+        System.out.println("\nPlease consult the vetrenarian and change the start time for one of the following treatments:");
         for (ScheduleItem item : problemTreatments){
             String animalName = new String();
             for(Animal animal : this.animals){
                 if (item.getAnimalID() == animal.getAnimalID()){
                     animalName = " (" + animal.getNickName() + ")";
                 }
-            System.out.println("Treatment ID: " + Integer.toString(item.getTreatmentID())+"     Description: " + item.getDescription()+ animalName);
+            System.out.println("\tTreatment ID: " + Integer.toString(item.getTreatmentID())+"\tDescription: " + item.getDescription()+ animalName);
             }
         }
-        System.out.println("Enter the Treatment ID of the treatment to adjust:");
-        System.out.println("***STILL UNDER CONSTRUCTION***");
+        System.out.println("\nEnter the Treatment ID of the treatment to adjust:");
+        System.out.println("\n***STILL UNDER CONSTRUCTION***");
     }
 
     
