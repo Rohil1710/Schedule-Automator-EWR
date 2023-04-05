@@ -258,9 +258,9 @@ public class ScheduleTooAgain {
                     validInput = true;
                     fixID = item.getTreatmentID();
                 }
+            }
             if (validInput == false){
                 System.out.println("Invalid ID entered. Please re-enter.");
-            }
             }
         }
 
