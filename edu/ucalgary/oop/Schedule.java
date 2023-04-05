@@ -36,8 +36,15 @@ public class Schedule {
             }
             catch(TimeLimitExceededException e){
                 System.out.println(e.getMessage());
+                System.exit(1);
             }
+            
             //generateTasks();
+
+            boolean needed = isVolunteerNeeded();
+            if (needed == true){
+                confirmVolunteer();
+            }
             
     
         }
@@ -142,7 +149,47 @@ public class Schedule {
         
     //}
 
+    public boolean isVolunteerNeeded(){
+        boolean needed = false;
+        for (int i = 0; i < 24; i++){
+            if (this.volunteerNeeded[i] == true){
+                needed = true;
+                break;
+            }
+        }
+        
+        return needed;
+    }
+
+    public void confirmVolunteer(){
+        
+        System.out.println("\nA back-up volunteer is required for the following times:");
+        for (int i = 0; i < 24; i++){
+            if (this.volunteerNeeded[i] == true){
+                String hour = Integer.toString(i)+":00";
+                System.out.println("\n\t"+hour);
+            }
+        }
+
+        boolean confirm = false;
+
+        while(confirm == false){
+            System.out.println("\nPlease contact the back-up volunteer(s), then enter 'Y' to confirm:");
+            Scanner input = new Scanner(System.in);
+            String line = input.nextLine();
+            if(line.equals("Y") || line.equals("y")){
+                confirm = true;
+            }
+
+            else {
+                System.out.println("\nOops! Invalid input.");
+            }
+
+        }
+
+        System.out.println("\nBack-up volunteers confirmed.");
     
+    }
     
     
     // GETTERS:
