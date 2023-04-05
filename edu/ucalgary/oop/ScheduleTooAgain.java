@@ -18,6 +18,7 @@ public class ScheduleTooAgain {
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[24]; 
     private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
     private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
+    private int problemHour = -1;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
     public ScheduleTooAgain() throws DatabaseConnectionException {
@@ -45,7 +46,7 @@ public class ScheduleTooAgain {
                 }
                 catch(TimeLimitExceededException e){
                     //System.out.println(e.getMessage());
-                    adjustDatabase(13);
+                    adjustDatabase(this.problemHour);
                     buildCheck = true;  //Just to see what its doing so far
                     //System.exit(1);
                 }
@@ -148,7 +149,9 @@ public class ScheduleTooAgain {
             }
 
             if (assignCheck == false){
+                this.problemHour = assignHour;
                 throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.");
+    
             }
             
         }
