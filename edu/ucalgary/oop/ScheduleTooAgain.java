@@ -273,7 +273,7 @@ public class ScheduleTooAgain {
         try{
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
             String update = new String("UPDATE TREATMENTS SET StartHour = ? WHERE TreatmentID = ?;");
-            PreparedStatement prepardedStatement = connection.prepareStatement(update);
+            PreparedStatement preparedStatement = connection.prepareStatement(update);
             int newHour = -1;
             boolean validHour = false;
             while(validHour == false){
