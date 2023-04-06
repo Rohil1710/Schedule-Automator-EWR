@@ -311,6 +311,7 @@ public class ScheduleTooAgain {
             //e.printStackTrace();
         }
 
+        problemHour = -1;
         System.out.println("\n***STILL UNDER CONSTRUCTION***");
     }
 
