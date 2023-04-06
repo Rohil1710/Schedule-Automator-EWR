@@ -297,6 +297,12 @@ public class ScheduleTooAgain {
 
             preparedStatement.executeUpdate();
             preparedStatement.close(); 
+
+            this.schedule = new ArrayList[24]; 
+            this.treatmentItems = new ArrayList<ScheduleItem>(); 
+            Statement statement = connection.createStatement();
+            retrieveAnimals(statement);
+
             connection.close();
         }
         catch (Exception e) {
