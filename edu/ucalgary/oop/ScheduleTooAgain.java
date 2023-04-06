@@ -301,7 +301,7 @@ public class ScheduleTooAgain {
             this.schedule = new ArrayList[24]; 
             this.treatmentItems = new ArrayList<ScheduleItem>(); 
             Statement statement = connection.createStatement();
-            retrieveAnimals(statement);
+            retrieveTreatments(statement);
 
             connection.close();
         }
