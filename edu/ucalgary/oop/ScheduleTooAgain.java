@@ -298,8 +298,14 @@ public class ScheduleTooAgain {
             preparedStatement.executeUpdate();
             preparedStatement.close(); 
 
-            this.schedule = new ArrayList[24]; 
-            this.treatmentItems = new ArrayList<ScheduleItem>(); 
+            Arrays.fill(this.availableTimes, 60);
+            this.schedule = new ArrayList[24];
+            for (int i = 0; i < 24; i++){
+                this.schedule[i] = new ArrayList<ScheduleItem>();
+            } 
+            this.treatmentItems = new ArrayList<ScheduleItem>();
+            this.availableTimes = new int[24];
+            this.volunteerNeeded = new boolean[24]; 
             Statement statement = connection.createStatement();
             retrieveTreatments(statement);
 
