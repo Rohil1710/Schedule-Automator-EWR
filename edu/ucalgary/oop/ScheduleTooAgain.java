@@ -293,7 +293,7 @@ public class ScheduleTooAgain {
             }
             
             preparedStatement.setInt(1, newHour);
-            preparedStatement.setInt(2, newHour);
+            preparedStatement.setInt(2, fixID);
 
             preparedStatement.executeUpdate();
             preparedStatement.close(); 
