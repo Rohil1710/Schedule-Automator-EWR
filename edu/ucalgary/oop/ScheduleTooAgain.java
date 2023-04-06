@@ -42,7 +42,7 @@ public class ScheduleTooAgain {
             
                 try{
                     assignTreatments();
-                    generateTasks();
+                    //generateTasks();
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
