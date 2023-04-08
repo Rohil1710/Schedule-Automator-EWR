@@ -9,13 +9,13 @@ package edu.ucalgary.oop;
 
 public class ScheduleItem{
 
-	private int treatmentID;
-	private int animalID;
-	private int taskID;
-	private int startHour;
-	private int maxWindow;
-	private int duration;
-	private String description;
+	private final int treatmentID;
+	private final int animalID;
+	private final int taskID;
+	private final int startHour;
+	private final int maxWindow;
+	private final int duration;
+	private final String description;
 
 	//Constructor
 	public ScheduleItem(int treatmentID, int animalID, int taskID, int startHour, int maxWindow, int duration, String description){
