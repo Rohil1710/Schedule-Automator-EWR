@@ -3,14 +3,14 @@ package edu.ucalgary.oop;
 import java.util.*;
 
 public class Animal {
-    private String species;
-    private String type;
-    private ArrayList<Integer> feedingTimes = new ArrayList<Integer>();
+    private final String species;
+    private final String type;
+    private final ArrayList<Integer> feedingTimes = new ArrayList<Integer>();
     // private int foodPrepDuration;
     // private int feedingDuratoin;
     // private int caseCleanDuration;
-    private String nickName;
-    private int animalID;
+    private final String nickName;
+    private final int animalID;
     // private boolean orphan;
     // private boolean needTreatment;
 
