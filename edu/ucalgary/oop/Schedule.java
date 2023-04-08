@@ -5,23 +5,25 @@ import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.PreparedStatement;
 import java.util.*; 
 import java.time.LocalDate;
 import java.io.*;   
     
-public class Schedule {
+public class Schedule{
     private int[] availableTimes = new int[24];
     private boolean[] volunteerNeeded = new boolean[24];
     private ArrayList<Animal> animals = new ArrayList<Animal>();
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[24]; 
     private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
     private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
+    private int problemHour = -1;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
     public Schedule() throws DatabaseConnectionException {
     
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
@@ -31,15 +33,23 @@ public class Schedule {
             for (int i = 0; i < 24; i++){
                 this.schedule[i] = new ArrayList<ScheduleItem>();
             }
-            try{
-                assignTreatments();
-            }
-            catch(TimeLimitExceededException e){
-                System.out.println(e.getMessage());
-                System.exit(1);
-            }
+
+            boolean buildCheck = false;
+
+            while(buildCheck == false){
             
-            generateTasks();
+                try{
+                    assignTreatments();
+                    //generateTasks();
+                    buildCheck = true;
+                }
+                catch(TimeLimitExceededException e){
+                    //System.out.println(e.getMessage());
+                    adjustDatabase(this.problemHour);
+                    //buildCheck = true;  //Just to see what its doing so far
+                    //System.exit(1);
+                }
+            }
 
             boolean needed = isVolunteerNeeded();
             if (needed == true){
@@ -61,7 +71,7 @@ public class Schedule {
     public void retrieveAnimals(Statement statement) {
         try{
                 
-            ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM EWR2.ANIMALS;");
             while (rs.next()) {
                 int animalID = rs.getInt("AnimalID");
                 String animalNickname = rs.getString("AnimalNickname");
@@ -138,7 +148,9 @@ public class Schedule {
             }
 
             if (assignCheck == false){
+                this.problemHour = startHour;
                 throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.");
+    
             }
             
         }
@@ -214,6 +226,98 @@ public class Schedule {
     
     }
 
+
+    //Adjust start time for one treatment at a time to try to make workable schedule
+    public void adjustDatabase(int problemHour){
+        ArrayList<ScheduleItem> problemTreatments = new ArrayList<ScheduleItem>();
+        for (ScheduleItem item : this.getTreatmentItems()){
+            if (item.getStartHour() == problemHour){
+                problemTreatments.add(item);
+            }
+        }
+
+        System.out.println("\nToo many tasks need to be scheduled for "+ Integer.toString(problemHour)+":00.");
+        System.out.println("\nPlease consult the vetrenarian and change the start time for one of the following treatments:");
+        for (ScheduleItem item : problemTreatments){
+            String animalName = new String();
+            for(Animal animal : this.animals){
+                if (item.getAnimalID() == animal.getAnimalID()){
+                    animalName = " (" + animal.getNickName() + ")";
+                }
+            }
+            System.out.println("\tTreatment ID: " + Integer.toString(item.getTreatmentID())+"\tDescription: " + item.getDescription()+ animalName);
+        }
+        System.out.println("\nEnter the Treatment ID of the treatment to adjust:");
+
+        int fixID = -1;
+        boolean validInput = false;
+        while(validInput == false){
+            Scanner input = new Scanner(System.in);
+            String line = input.nextLine();
+            for (ScheduleItem item : problemTreatments){
+                String ID = new String(Integer.toString(item.getTreatmentID()));
+                if (ID.equals(line)){
+                    validInput = true;
+                    fixID = item.getTreatmentID();
+                }
+            }
+            if (validInput == false){
+                System.out.println("Invalid ID entered. Please re-enter.");
+            }
+        }
+
+        System.out.println("Treatment ID entered: " + Integer.toString(fixID));
+
+        try{
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
+            String update = new String("UPDATE TREATMENTS SET StartHour = ? WHERE TreatmentID = ?;");
+            PreparedStatement preparedStatement = connection.prepareStatement(update);
+            int newHour = -1;
+            boolean validHour = false;
+            while(validHour == false){
+                System.out.println("\nPlease enter the new start hour as an integer between 0 and 23:");
+                Scanner input = new Scanner(System.in);
+                String line = input.nextLine();
+                try{
+                    newHour = Integer.parseInt(line);
+                }
+                catch(Exception e){
+                    System.out.println("Invalid input. Please enter the time as an integer number.");
+                }
+
+                if(newHour >= 0 && newHour < 24){
+                    validHour = true;
+                } 
+            }
+            
+            preparedStatement.setInt(1, newHour);
+            preparedStatement.setInt(2, fixID);
+
+            preparedStatement.executeUpdate();
+            preparedStatement.close(); 
+
+            Arrays.fill(this.availableTimes, 60);
+            this.schedule = new ArrayList[24];
+            for (int i = 0; i < 24; i++){
+                this.schedule[i] = new ArrayList<ScheduleItem>();
+            } 
+            this.treatmentItems = new ArrayList<ScheduleItem>();
+            this.availableTimes = new int[24];
+            this.volunteerNeeded = new boolean[24]; 
+            Statement statement = connection.createStatement();
+            retrieveTreatments(statement);
+
+            connection.close();
+        }
+        catch (Exception e) {
+            System.out.println(e.getMessage());
+            //throw new DatabaseConnectionException("Database Error");
+            //e.printStackTrace();
+        }
+
+        problemHour = -1;
+        System.out.println("\n***STILL UNDER CONSTRUCTION***");
+    }
 
     
     
