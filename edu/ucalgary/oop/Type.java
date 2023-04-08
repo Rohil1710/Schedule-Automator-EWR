@@ -13,19 +13,19 @@ public enum Type{
 	CREPUSCULAR;
 	
 	//Times given in 24-hour format.
-	public int[] getFeedingTimes(){
+	public int getFeedingStartTime(){
 		switch(this){
 			case NOCTURNAL:
-				int[] timesNocturnal = {0, 1, 2};
+				int timesNocturnal = 0;
 				return timesNocturnal;	
 			case DIURNAL:
-				int[] timesDiurnal = {8, 9, 10};
+				int timesDiurnal = 8;
 				return timesDiurnal;
 			case CREPUSCULAR:
-				int[] timesCrepuscular = {19, 20, 21};
+				int timesCrepuscular = 19;
 				return timesCrepuscular;
 			default:
-				int[] times = {0};
+				int times = -1;
 				return times;
 				//Maybe throw an error instead?
 		}
