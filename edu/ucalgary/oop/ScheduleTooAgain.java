@@ -190,7 +190,7 @@ public class ScheduleTooAgain {
                 int workingTime = Time - currentSpecies.getFoodPrepDuration();
                 int possibleNumber = workingTime/currentSpecies.getFeedingDuration();
                 if(possibleNumber >= numberAnimal){
-                    String description = "Feed "+ Integer.toString(numberAnimal) + " " + species.toString().toLowerCase()+("s (");
+                    String description = "Feed "+ Integer.toString(numberAnimal) + " " + currentSpecies.toString().toLowerCase()+("s (");
                     for(Animal animal : currentAnimals){
                         description += animal.getNickName();
                     }
