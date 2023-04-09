@@ -130,7 +130,7 @@ public class ScheduleThree {
 
             int assignHour = startHour;
             for (int n = 0; n < maxWindow; n++){
-                if(n < 24){               
+                if(assignHour < 24){               
                     if (this.availableTimes[assignHour] >= duration){
                         this.schedule[assignHour].add(item);
                         this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
@@ -144,7 +144,7 @@ public class ScheduleThree {
             assignHour = startHour;
             if (assignCheck == false){
                 for(int n = 0; n < maxWindow; n++){
-                    if (n < 24){
+                    if (assignHour < 24){
                         if (this.volunteerNeeded[assignHour] == false){
                             this.availableTimes[assignHour] += 60;
                             this.schedule[assignHour].add(item);
@@ -198,34 +198,33 @@ public class ScheduleThree {
             int cagesCleaned = 0;
 
             for (int i = 0; i < 24; i++){
-                if(i < 24){
-                    int time = this.availableTimes[i];
-                    int possibleNumber = time/currentSpecies.getCageCleanDuration();
-                    int cagesToClean = Math.min(possibleNumber, numberAnimal - cagesCleaned);
+                int time = this.availableTimes[i];
+                int possibleNumber = time/currentSpecies.getCageCleanDuration();
+                int cagesToClean = Math.min(possibleNumber, numberAnimal - cagesCleaned);
 
-                    if(cagesToClean > 0){
-                        String description = "Clean "+ Integer.toString(cagesToClean) + " " + currentSpecies.toString().toLowerCase() + " ";
-                        if(numberAnimal > 1){
-                            description +="cages (";
-                        }
-                        else{description +="cage (";}
-
-                        for (int j = 0; j < cagesToClean; j++) {
-                            Animal animal = currentAnimals.get(cagesCleaned + j);
-                            description += animal.getNickName() + ", ";
-                        }
-
-                        description = description.substring(0, description.length()-2);
-                        description += ")\n";
-                
-                        ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
-                        schedule[i].add(item);
-                        
-                        cagesCleaned += cagesToClean;
-                        if (cagesCleaned >= numberAnimal) {
-                            break;
-                        }
+                if(cagesToClean > 0){
+                    String description = "Clean "+ Integer.toString(cagesToClean) + " " + currentSpecies.toString().toLowerCase() + " ";
+                    if(numberAnimal > 1){
+                        description +="cages (";
                     }
+                    else{description +="cage (";}
+
+                    for (int j = 0; j < cagesToClean; j++) {
+                        Animal animal = currentAnimals.get(cagesCleaned + j);
+                        description += animal.getNickName() + ", ";
+                    }
+
+                    description = description.substring(0, description.length()-2);
+                    description += ")\n";
+                
+                    ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                    schedule[i].add(item);
+                        
+                    cagesCleaned += cagesToClean;
+                    if (cagesCleaned >= numberAnimal) {
+                        break;
+                    }
+                    
                 }
             }
 
