@@ -6,21 +6,27 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.util.*; 
+import java.util.*;
+
+import edu.ucalgary.oop.Animal;
+
 import java.time.LocalDate;
 import java.io.*;   
+import java.lang.Math.*;
     
-public class Schedule4{
+public class Schedule {
     private int[] availableTimes = new int[24];
     private boolean[] volunteerNeeded = new boolean[24];
     private ArrayList<Animal> animals = new ArrayList<Animal>();
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[24]; 
     private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
     private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
+    private ArrayList<Integer> orphanIDs= new ArrayList<Integer>();
     private int problemHour = -1;
+    private int timeUsed = 0;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
-    public Schedule4() throws DatabaseConnectionException {
+    public Schedule() throws DatabaseConnectionException {
     
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
@@ -34,13 +40,16 @@ public class Schedule4{
                 this.schedule[i] = new ArrayList<ScheduleItem>();
             }
 
+            estimateTimeUsed();
+
             boolean buildCheck = false;
 
             while(buildCheck == false){
             
                 try{
                     assignTreatments();
-                    //generateTasks();
+                    generateFeedingTasks();
+                    generateCleaningTasks();
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
@@ -67,6 +76,41 @@ public class Schedule4{
     
     }
     
+
+    public void estimateTimeUsed(){
+        for (ScheduleItem item: this.treatmentItems){
+            this.timeUsed += item.getDuration();
+        }
+
+        System.out.println("\nAdded durations for medical tasks. Estimated time used is: " + Integer.toString(timeUsed));
+
+        Species species[] = Species.values();
+        ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
+        int numberAnimal = 0;
+        for (Species currentSpecies : species){
+            String type = currentSpecies.getType();
+            Type typeEnum;
+			try{
+				typeEnum = Type.valueOf(type); 			
+			}
+			catch(IllegalArgumentException e){
+				throw new IllegalArgumentException("Error: Invalid type found in generate cleaning tasks.");
+			}			
+
+            for (Animal animal: this.animals){
+                if (animal.getSpecies().equals(currentSpecies.toString())){
+                    currentAnimals.add(animal);
+                    numberAnimal +=1;
+                }
+            }
+            
+            int cleanTimeNeeded = currentSpecies.getCageCleanDuration()*numberAnimal;
+            int feedTimeNeeded = currentSpecies.getFoodPrepDuration()  + currentSpecies.getFeedingDuration()*numberAnimal;
+            this.timeUsed += cleanTimeNeeded + feedTimeNeeded;
+        }        
+
+        System.out.println("\nAdded durations for cleaning and feeding tasks. Estimated time used is: " + Integer.toString(timeUsed));
+    }
     
     public void retrieveAnimals(Statement statement) {
         try{
@@ -122,29 +166,37 @@ public class Schedule4{
 
             int assignHour = startHour;
             for (int n = 0; n < maxWindow; n++){
-                if (this.availableTimes[assignHour] >= duration){
-                    this.schedule[assignHour].add(item);
-                    this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
-                    assignCheck = true;
-                    break;
+                if(assignHour < 24){               
+                    if (this.availableTimes[assignHour] >= duration){
+                        this.schedule[assignHour].add(item);
+                        this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
+                        assignCheck = true;
+                        break;
+                    }
+                    assignHour++;
                 }
-                assignHour++;
             }
 
             assignHour = startHour;
             if (assignCheck == false){
                 for(int n = 0; n < maxWindow; n++){
-                    if (this.volunteerNeeded[assignHour] == false){
-                        this.availableTimes[assignHour] += 60;
-                        this.schedule[assignHour].add(item);
-                        this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
-                        this.volunteerNeeded[assignHour] = true;
-                        assignCheck = true;
-                        break;
+                    if (assignHour < 24){
+                        if (this.volunteerNeeded[assignHour] == false){
+                            this.availableTimes[assignHour] += 60;
+                            this.schedule[assignHour].add(item);
+                            this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
+                            this.volunteerNeeded[assignHour] = true;
+                            assignCheck = true;
+                            break;
+                        }
+                        assignHour++;
                     }
-                    assignHour++;
 
                 }
+            }
+
+            if(item.getDescription().contains("Kit feeding")){
+                this.orphanIDs.add(item.getAnimalID());
             }
 
             if (assignCheck == false){
@@ -157,33 +209,144 @@ public class Schedule4{
     }
 
     //Tasks done everyday:
-    public void generateTasks(){
-        // Coyote tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean coyote cage"));
 
-        // Porcupine tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 10, "Feed and clean porcupine cage")); // Feed at 7 PM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 10, "Clean porcupine cage"));
+    public void generateCleaningTasks(){
+        Species species[] = Species.values();
+        ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
+        int numberAnimal = 0;
+        for (Species currentSpecies : species){
+            String type = currentSpecies.getType();
+            Type typeEnum;
+			try{
+				typeEnum = Type.valueOf(type); 			
+			}
+			catch(IllegalArgumentException e){
+				throw new IllegalArgumentException("Error: Invalid type found in generate cleaning tasks.");
+			}			
 
-        // Fox tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 10, "Feed and clean fox cage")); // Feed at 12 AM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean fox cage"));
+            for (Animal animal: this.animals){
+                if (animal.getSpecies().equals(currentSpecies.toString())){
+                    currentAnimals.add(animal);
+                    numberAnimal +=1;
+                }
+            }
+            
+            int cagesCleaned = 0;
 
-        // Raccoon tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 5, "Feed and clean raccoon cage")); // Feed at 12 AM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean raccoon cage"));
+            for (int i = 0; i < 24; i++){
+                int time = this.availableTimes[i];
+                int possibleNumber = time/currentSpecies.getCageCleanDuration();
+                int cagesToClean = Math.min(possibleNumber, numberAnimal - cagesCleaned);
 
-        // Beaver tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 8, 3, 5, "Feed and clean beaver cage")); // Feed at 8 AM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean beaver cage"));
+                if(cagesToClean > 0){
+                    String description = "Clean "+ Integer.toString(cagesToClean) + " " + currentSpecies.toString().toLowerCase() + " ";
+                    if(numberAnimal > 1){
+                        description +="cages (";
+                    }
+                    else{description +="cage (";}
 
-        // Print all tasks
-        for (ScheduleItem item : taskItems) {
-            System.out.println("Task ID: " + item.getTaskID() + ", Description: " + item.getDescription());
+                    for (int j = 0; j < cagesToClean; j++) {
+                        Animal animal = currentAnimals.get(cagesCleaned + j);
+                        description += animal.getNickName() + ", ";
+                    }
+
+                    description = description.substring(0, description.length()-2);
+                    description += ")\n";
+                
+                    ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                    schedule[i].add(item);
+                    this.availableTimes[i] -= currentSpecies.getCageCleanDuration()*cagesToClean;
+                        
+                    cagesCleaned += cagesToClean;
+                    if (cagesCleaned >= numberAnimal) {
+                        break;
+                    }
+                    
+                }
+            }
+
+            currentAnimals = new ArrayList<Animal>();
+            numberAnimal = 0;
+
         }
     }
 
+
+    public void generateFeedingTasks()  throws TimeLimitExceededException{
+        Species species[] = Species.values();
+        ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
+        int numberAnimal = 0;
+        int window = 3;
+        int startTime = -1;
+        
+        for (Species currentSpecies : species) {
+            String type = currentSpecies.getType();
+            Type typeEnum;
+            
+            try {
+                typeEnum = Type.valueOf(type);
+                startTime = typeEnum.getFeedingStartTime();
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Error: Invalid type found in generate feeding tasks.");
+            }
+    
+            for (Animal animal : this.animals) {
+                if (animal.getSpecies().equals(currentSpecies.toString()) && this.orphanIDs.contains(animal.getAnimalID()) == false) {
+                    currentAnimals.add(animal);
+                    numberAnimal += 1;
+                }
+            }
+    
+            int animalsFed = 0;
+            for (int i = startTime; i < startTime + window; i++) {
+                if(i < 24){
+                    int Time = this.availableTimes[i];
+                    int workingTime = Time - currentSpecies.getFoodPrepDuration();
+                    int possibleNumber = workingTime / currentSpecies.getFeedingDuration();
+                    this.problemHour = i;
+        
+                    int animalsToFeed = Math.min(possibleNumber, numberAnimal - animalsFed);
+                    if (animalsToFeed > 0) {
+                        String description = "Feed " + Integer.toString(animalsToFeed) + " " + currentSpecies.toString().toLowerCase();
+                        if (currentSpecies.toString().equals("FOX") && animalsToFeed > 1) {
+                            description += "es (";
+                        } else if (animalsToFeed > 1) {
+                            description += "s (";
+                        } else {
+                            description += " (";
+                        }
+        
+                        for (int j = 0; j < animalsToFeed; j++) {
+                            Animal animal = currentAnimals.get(animalsFed + j);
+                            description += animal.getNickName() + ", ";
+                        }
+                        description = description.substring(0, description.length() - 2);
+                        description += ")\n";
+                        ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                        schedule[i].add(item);
+                        this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
+
+                        animalsFed += animalsToFeed;
+                        if (animalsFed >= numberAnimal) {
+                            break;
+                        }
+                    }
+                }
+            }
+            if(animalsFed < numberAnimal){
+                throw new TimeLimitExceededException("Too many animals to feed at this hour.");
+            }
+
+            this.problemHour = -1;
+            currentAnimals = new ArrayList<Animal>();
+            numberAnimal = 0;
+            startTime = -1;
+        }
+    }
+    
+
+
+    
     public boolean isVolunteerNeeded(){
         boolean needed = false;
         for (int i = 0; i < 24; i++){
@@ -229,6 +392,13 @@ public class Schedule4{
 
     //Adjust start time for one treatment at a time to try to make workable schedule
     public void adjustDatabase(int problemHour){
+        if (this.timeUsed > 48*60){
+            System.out.println("There is not enough time in one day to care for this number of animals (medical and regular tasks), even with a backup volunteer.");
+            System.out.println("Please contact other rescues and arrange to transfer some animals for care elsewhere.");
+            System.out.println("Adjust the database before re-trying schedule generation.");
+            System.exit(1);
+        }
+
         ArrayList<ScheduleItem> problemTreatments = new ArrayList<ScheduleItem>();
         for (ScheduleItem item : this.getTreatmentItems()){
             if (item.getStartHour() == problemHour){
@@ -304,6 +474,7 @@ public class Schedule4{
             this.treatmentItems = new ArrayList<ScheduleItem>();
             this.availableTimes = new int[24];
             this.volunteerNeeded = new boolean[24]; 
+            this.timeUsed = 0;
             Statement statement = connection.createStatement();
             retrieveTreatments(statement);
 
@@ -316,7 +487,7 @@ public class Schedule4{
         }
 
         problemHour = -1;
-        System.out.println("\n***STILL UNDER CONSTRUCTION***");
+        //System.out.println("\n***STILL UNDER CONSTRUCTION***");
     }
 
     
@@ -393,3 +564,4 @@ public void saveToFile(String formattedSchedule, LocalDate date){
         }
     }
 }
+
