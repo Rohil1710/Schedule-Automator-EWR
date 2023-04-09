@@ -27,7 +27,7 @@ public class Animal {
     public Animal(int id, String animalNickName, String animalSpecies) {
         this.animalID = id;
         this.nickName = animalNickName;
-        this.species = animalSpecies.toUpperCase();
+        this.species = animalSpecies; //removed .toUpperCase
         //System.out.println(this.species);
         // this.needTreatment = treatment;
         // this.type = typ;
