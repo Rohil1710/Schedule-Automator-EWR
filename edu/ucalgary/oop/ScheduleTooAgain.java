@@ -42,7 +42,7 @@ public class ScheduleTooAgain {
             
                 try{
                     assignTreatments();
-                    generateTasks();
+                    generateFeedingTasks();
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
@@ -159,7 +159,7 @@ public class ScheduleTooAgain {
     }
 
     //Tasks done everyday:
-    public void generateTasks(){
+    public void generateFeedingTasks(){
 
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
@@ -175,7 +175,7 @@ public class ScheduleTooAgain {
 				
 			}
 			catch(IllegalArgumentException e){
-				throw new IllegalArgumentException("Error: Invalid type found in generate tasks.");
+				throw new IllegalArgumentException("Error: Invalid type found in generate feeding tasks.");
 			}			
 
             for (Animal animal: this.animals){
@@ -184,13 +184,26 @@ public class ScheduleTooAgain {
                     numberAnimal +=1;
                 }
             }
+
+            for (int i = startTime; i < startTime + window; i++){
+                int Time = this.availableTimes[i];
+                int workingTime = Time - currentSpecies.getFoodPrepDuration();
+                int possibleNumber = workingTime/currentSpecies.getFeedingDuration();
+                if(possibleNumber >= numberAnimal){
+                    String description = "Feed "+ Integer.toString(numberAnimal) + " " + species.toString().toLowerCase()+("s (");
+                    for(Animal animal : currentAnimals){
+                        description += animal.getNickName();
+                    }
+                    description +=")";
+                    ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                    schedule[i].add(item);
+                    break;
+                }
+                
+            }
             //Test prints:
-            System.out.println("Number of "+ currentSpecies.toString() +"s: " + Integer.toString(numberAnimal));
+            System.out.println("Number of "+ currentSpecies.toString() +"S: " + Integer.toString(numberAnimal));
             System.out.println("Feeding Start Time: " + Integer.toString(startTime));
-            //for (Animal animal: currentAnimals){
-                //System.out.println("\tAnimal ID: " + animal.getAnimalID());
-                //System.out.println("\tNickname: " + animal.getNickName());
-            //}
             currentAnimals = new ArrayList<Animal>();
             numberAnimal = 0;
             startTime = -1;
