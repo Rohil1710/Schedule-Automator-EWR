@@ -25,7 +25,7 @@ public class ScheduleTooAgain {
     public ScheduleTooAgain() throws DatabaseConnectionException {
     
         try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
@@ -42,7 +42,7 @@ public class ScheduleTooAgain {
             
                 try{
                     assignTreatments();
-                    //generateTasks();
+                    generateTasks();
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
@@ -73,7 +73,7 @@ public class ScheduleTooAgain {
     public void retrieveAnimals(Statement statement) {
         try{
                 
-            ResultSet rs = statement.executeQuery("SELECT * FROM EWR2.ANIMALS;");
+            ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
             while (rs.next()) {
                 int animalID = rs.getInt("AnimalID");
                 String animalNickname = rs.getString("AnimalNickname");
@@ -293,7 +293,7 @@ public class ScheduleTooAgain {
         System.out.println("Treatment ID entered: " + Integer.toString(fixID));
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR2", "user1", "ensf");
+            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
             String update = new String("UPDATE TREATMENTS SET StartHour = ? WHERE TreatmentID = ?;");
             PreparedStatement preparedStatement = connection.prepareStatement(update);
             int newHour = -1;
