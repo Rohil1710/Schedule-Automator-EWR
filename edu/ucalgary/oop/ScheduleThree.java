@@ -84,6 +84,8 @@ public class ScheduleThree {
             this.timeUsed += item.getDuration();
         }
 
+        System.out.println("\nAdded durations for medical tasks. Estimated time used is: " + Integer.toString(timeUsed));
+
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
@@ -109,6 +111,7 @@ public class ScheduleThree {
             this.timeUsed += cleanTimeNeeded + feedTimeNeeded;
         }        
 
+        System.out.println("\nAdded durations for cleaning and feeding tasks. Estimated time used is: " + Integer.toString(timeUsed));
     }
     
     public void retrieveAnimals(Statement statement) {
