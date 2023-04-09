@@ -130,27 +130,31 @@ public class ScheduleThree {
 
             int assignHour = startHour;
             for (int n = 0; n < maxWindow; n++){
-                if (this.availableTimes[assignHour] >= duration){
-                    this.schedule[assignHour].add(item);
-                    this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
-                    assignCheck = true;
-                    break;
+                if(n < 24){               
+                    if (this.availableTimes[assignHour] >= duration){
+                        this.schedule[assignHour].add(item);
+                        this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
+                        assignCheck = true;
+                        break;
+                    }
+                    assignHour++;
                 }
-                assignHour++;
             }
 
             assignHour = startHour;
             if (assignCheck == false){
                 for(int n = 0; n < maxWindow; n++){
-                    if (this.volunteerNeeded[assignHour] == false){
-                        this.availableTimes[assignHour] += 60;
-                        this.schedule[assignHour].add(item);
-                        this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
-                        this.volunteerNeeded[assignHour] = true;
-                        assignCheck = true;
-                        break;
+                    if (n < 24){
+                        if (this.volunteerNeeded[assignHour] == false){
+                            this.availableTimes[assignHour] += 60;
+                            this.schedule[assignHour].add(item);
+                            this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
+                            this.volunteerNeeded[assignHour] = true;
+                            assignCheck = true;
+                            break;
+                        }
+                        assignHour++;
                     }
-                    assignHour++;
 
                 }
             }
@@ -194,31 +198,33 @@ public class ScheduleThree {
             int cagesCleaned = 0;
 
             for (int i = 0; i < 24; i++){
-                int time = this.availableTimes[i];
-                int possibleNumber = time/currentSpecies.getCageCleanDuration();
-                int cagesToClean = Math.min(possibleNumber, numberAnimal - cagesCleaned);
+                if(i < 24){
+                    int time = this.availableTimes[i];
+                    int possibleNumber = time/currentSpecies.getCageCleanDuration();
+                    int cagesToClean = Math.min(possibleNumber, numberAnimal - cagesCleaned);
 
-                if(cagesToClean > 0){
-                    String description = "Clean "+ Integer.toString(cagesToClean) + " " + currentSpecies.toString().toLowerCase() + " ";
-                    if(numberAnimal > 1){
-                        description +="cages (";
-                    }
-                    else{description +="cage (";}
+                    if(cagesToClean > 0){
+                        String description = "Clean "+ Integer.toString(cagesToClean) + " " + currentSpecies.toString().toLowerCase() + " ";
+                        if(numberAnimal > 1){
+                            description +="cages (";
+                        }
+                        else{description +="cage (";}
 
-                    for (int j = 0; j < cagesToClean; j++) {
-                        Animal animal = currentAnimals.get(cagesCleaned + j);
-                        description += animal.getNickName() + ", ";
-                    }
+                        for (int j = 0; j < cagesToClean; j++) {
+                            Animal animal = currentAnimals.get(cagesCleaned + j);
+                            description += animal.getNickName() + ", ";
+                        }
 
-                    description = description.substring(0, description.length()-2);
-                    description += ")\n";
-            
-                    ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
-                    schedule[i].add(item);
-                    
-                    cagesCleaned += cagesToClean;
-                    if (cagesCleaned >= numberAnimal) {
-                        break;
+                        description = description.substring(0, description.length()-2);
+                        description += ")\n";
+                
+                        ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                        schedule[i].add(item);
+                        
+                        cagesCleaned += cagesToClean;
+                        if (cagesCleaned >= numberAnimal) {
+                            break;
+                        }
                     }
                 }
             }
@@ -257,40 +263,41 @@ public class ScheduleThree {
     
             int animalsFed = 0;
             for (int i = startTime; i < startTime + window; i++) {
-                int Time = this.availableTimes[i];
-                int workingTime = Time - currentSpecies.getFoodPrepDuration();
-                int possibleNumber = workingTime / currentSpecies.getFeedingDuration();
-                this.problemHour = i;
-    
-                int animalsToFeed = Math.min(possibleNumber, numberAnimal - animalsFed);
-                if (animalsToFeed > 0) {
-                    String description = "Feed " + Integer.toString(animalsToFeed) + " " + currentSpecies.toString().toLowerCase();
-                    if (currentSpecies.toString().equals("FOX") && animalsToFeed > 1) {
-                        description += "es (";
-                    } else if (animalsToFeed > 1) {
-                        description += "s (";
-                    } else {
-                        description += " (";
-                    }
-    
-                    for (int j = 0; j < animalsToFeed; j++) {
-                        Animal animal = currentAnimals.get(animalsFed + j);
-                        description += animal.getNickName() + ", ";
-                    }
-                    description = description.substring(0, description.length() - 2);
-                    description += ")\n";
-                    ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
-                    schedule[i].add(item);
-                    this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
+                if(i < 24){
+                    int Time = this.availableTimes[i];
+                    int workingTime = Time - currentSpecies.getFoodPrepDuration();
+                    int possibleNumber = workingTime / currentSpecies.getFeedingDuration();
+                    this.problemHour = i;
+        
+                    int animalsToFeed = Math.min(possibleNumber, numberAnimal - animalsFed);
+                    if (animalsToFeed > 0) {
+                        String description = "Feed " + Integer.toString(animalsToFeed) + " " + currentSpecies.toString().toLowerCase();
+                        if (currentSpecies.toString().equals("FOX") && animalsToFeed > 1) {
+                            description += "es (";
+                        } else if (animalsToFeed > 1) {
+                            description += "s (";
+                        } else {
+                            description += " (";
+                        }
+        
+                        for (int j = 0; j < animalsToFeed; j++) {
+                            Animal animal = currentAnimals.get(animalsFed + j);
+                            description += animal.getNickName() + ", ";
+                        }
+                        description = description.substring(0, description.length() - 2);
+                        description += ")\n";
+                        ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                        schedule[i].add(item);
+                        this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
 
-                    animalsFed += animalsToFeed;
-                    if (animalsFed >= numberAnimal) {
-                        break;
+                        animalsFed += animalsToFeed;
+                        if (animalsFed >= numberAnimal) {
+                            break;
+                        }
                     }
                 }
             }
             if(animalsFed < numberAnimal){
-
                 throw new TimeLimitExceededException("Too many animals to feed at this hour.");
             }
 
