@@ -16,7 +16,7 @@ import java.time.LocalDate;
 import java.io.*;   
 import java.lang.Math.*;
     
-public class ScheduleThree {
+public class Schedule {
     private int[] availableTimes = new int[24];
     private boolean[] volunteerNeeded = new boolean[24];
     private ArrayList<Animal> animals = new ArrayList<Animal>();
@@ -28,7 +28,7 @@ public class ScheduleThree {
     private int timeUsed = 0;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
-    public ScheduleThree() throws DatabaseConnectionException {
+    public Schedule() throws DatabaseConnectionException {
     
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");

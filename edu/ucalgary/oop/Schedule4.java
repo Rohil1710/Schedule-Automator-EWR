@@ -10,7 +10,7 @@ import java.util.*;
 import java.time.LocalDate;
 import java.io.*;   
     
-public class Schedule{
+public class Schedule4{
     private int[] availableTimes = new int[24];
     private boolean[] volunteerNeeded = new boolean[24];
     private ArrayList<Animal> animals = new ArrayList<Animal>();
@@ -20,7 +20,7 @@ public class Schedule{
     private int problemHour = -1;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
-    public Schedule() throws DatabaseConnectionException {
+    public Schedule4() throws DatabaseConnectionException {
     
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
