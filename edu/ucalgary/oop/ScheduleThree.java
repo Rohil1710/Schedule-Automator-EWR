@@ -230,7 +230,7 @@ public class ScheduleThree {
     }
 
 
-    public void generateFeedingTasks() {
+    public void generateFeedingTasks()  throws TimeLimitExceededException{
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
@@ -259,6 +259,7 @@ public class ScheduleThree {
                 int Time = this.availableTimes[i];
                 int workingTime = Time - currentSpecies.getFoodPrepDuration();
                 int possibleNumber = workingTime / currentSpecies.getFeedingDuration();
+                this.problemHour = i;
     
                 int animalsToFeed = Math.min(possibleNumber, numberAnimal - animalsFed);
                 if (animalsToFeed > 0) {
@@ -279,13 +280,19 @@ public class ScheduleThree {
                     description += ")\n";
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
-    
+                    this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
+                    this.problemHour = -1;
+
                     animalsFed += animalsToFeed;
                     if (animalsFed >= numberAnimal) {
                         break;
                     }
                 }
             }
+            if(animalsFed < numberAnimal){
+                throw new TimeLimitExceededException("Too many animals to feed at this hour.");
+            }
+
             currentAnimals = new ArrayList<Animal>();
             numberAnimal = 0;
             startTime = -1;
