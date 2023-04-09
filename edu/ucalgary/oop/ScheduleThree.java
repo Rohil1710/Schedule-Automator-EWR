@@ -240,6 +240,7 @@ public class ScheduleThree {
         for (Species currentSpecies : species) {
             String type = currentSpecies.getType();
             Type typeEnum;
+            
             try {
                 typeEnum = Type.valueOf(type);
                 startTime = typeEnum.getFeedingStartTime();
@@ -281,7 +282,6 @@ public class ScheduleThree {
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
                     this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
-                    this.problemHour = -1;
 
                     animalsFed += animalsToFeed;
                     if (animalsFed >= numberAnimal) {
@@ -290,9 +290,11 @@ public class ScheduleThree {
                 }
             }
             if(animalsFed < numberAnimal){
+
                 throw new TimeLimitExceededException("Too many animals to feed at this hour.");
             }
 
+            this.problemHour = -1;
             currentAnimals = new ArrayList<Animal>();
             numberAnimal = 0;
             startTime = -1;
