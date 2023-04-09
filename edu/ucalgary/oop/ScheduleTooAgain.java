@@ -166,8 +166,10 @@ public class ScheduleTooAgain {
         int numberAnimal = 0;
         for (Species currentSpecies : species){
             //TestPrint:
-            //System.out.println("Current Species: " + currentSpecies.toString());
+            System.out.println("Current Species: " + currentSpecies.toString());
             for (Animal animal: this.animals){
+                //TestPrint:
+                System.out.println("\tAnimal Species: "+animal.getSpecies());
                 if (animal.getSpecies() == currentSpecies.toString()){
                     currentAnimals.add(animal);
                     numberAnimal +=1;
