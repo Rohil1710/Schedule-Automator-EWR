@@ -14,25 +14,6 @@ public enum Species{
 	BEAVER,
 	RACCOON;
 
-	@Override
-	public String toString(){
-		switch(this){
-			case COYOTE:
-				return "coyote";	
-			case FOX:
-				return "fox";
-			case PORCUPINE:
-				return "porcupine";
-			case BEAVER:
-				return "beaver";
-			case RACCOON:
-				return "raccoon";
-			default:
-				return null;
-		}
-	}
-
-	
 	//Returns number of minutes for feeding duration for corresponding species.
 	public int getFeedingDuration(){
 		switch(this){
