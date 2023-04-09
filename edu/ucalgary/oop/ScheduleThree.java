@@ -8,11 +8,15 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.PreparedStatement;
-import java.util.*; 
+import java.util.*;
+
+import edu.ucalgary.oop.Animal;
+
 import java.time.LocalDate;
 import java.io.*;   
+import java.lang.Math.*;
     
-public class ScheduleTooAgain {
+public class ScheduleThree {
     private int[] availableTimes = new int[24];
     private boolean[] volunteerNeeded = new boolean[24];
     private ArrayList<Animal> animals = new ArrayList<Animal>();
@@ -23,7 +27,7 @@ public class ScheduleTooAgain {
     private int problemHour = -1;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
-    public ScheduleTooAgain() throws DatabaseConnectionException {
+    public ScheduleThree() throws DatabaseConnectionException {
     
         try {
             Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
@@ -167,7 +171,6 @@ public class ScheduleTooAgain {
     //Tasks done everyday:
 
     public void generateCleaningTasks(){
-
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
@@ -187,89 +190,108 @@ public class ScheduleTooAgain {
                     numberAnimal +=1;
                 }
             }
+            
+            int cagesCleaned = 0;
 
             for (int i = 0; i < 24; i++){
                 int time = this.availableTimes[i];
                 int possibleNumber = time/currentSpecies.getCageCleanDuration();
-                if(possibleNumber >= numberAnimal && numberAnimal > 0){
-                    String description = "Clean "+ Integer.toString(numberAnimal) + " " + currentSpecies.toString().toLowerCase();
+                int cagesToClean = Math.min(possibleNumber, numberAnimal - cagesCleaned);
+
+                if(cagesToClean > 0){
+                    String description = "Clean "+ Integer.toString(cagesToClean) + " " + currentSpecies.toString().toLowerCase() + " ";
                     if(numberAnimal > 1){
                         description +="cages (";
                     }
                     else{description +="cage (";}
 
-                    for(Animal animal : currentAnimals){
+                    for (int j = 0; j < cagesToClean; j++) {
+                        Animal animal = currentAnimals.get(cagesCleaned + j);
                         description += animal.getNickName() + ", ";
                     }
+
                     description = description.substring(0, description.length()-2);
                     description += ")\n";
+            
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
-                    break;
+                    
+                    cagesCleaned += cagesToClean;
+                    if (cagesCleaned >= numberAnimal) {
+                        break;
+                    }
                 }
             }
-        }
 
+            currentAnimals = new ArrayList<Animal>();
+            numberAnimal = 0;
+
+        }
     }
 
 
-    public void generateFeedingTasks(){
-
+    public void generateFeedingTasks() {
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
         int window = 3;
         int startTime = -1;
-        for (Species currentSpecies : species){
+        
+        for (Species currentSpecies : species) {
             String type = currentSpecies.getType();
             Type typeEnum;
-			try{
-				typeEnum = Type.valueOf(type); 
+            try {
+                typeEnum = Type.valueOf(type);
                 startTime = typeEnum.getFeedingStartTime();
-				
-			}
-			catch(IllegalArgumentException e){
-				throw new IllegalArgumentException("Error: Invalid type found in generate feeding tasks.");
-			}			
-
-            for (Animal animal: this.animals){
-                if (animal.getSpecies().equals(currentSpecies.toString()) && this.orphanIDs.contains(animal.getAnimalID()) == false){
+            } catch (IllegalArgumentException e) {
+                throw new IllegalArgumentException("Error: Invalid type found in generate feeding tasks.");
+            }
+    
+            for (Animal animal : this.animals) {
+                if (animal.getSpecies().equals(currentSpecies.toString()) && this.orphanIDs.contains(animal.getAnimalID()) == false) {
                     currentAnimals.add(animal);
-                    numberAnimal +=1;
+                    numberAnimal += 1;
                 }
             }
-
-            for (int i = startTime; i < startTime + window; i++){
+    
+            int animalsFed = 0;
+            for (int i = startTime; i < startTime + window; i++) {
                 int Time = this.availableTimes[i];
                 int workingTime = Time - currentSpecies.getFoodPrepDuration();
-                int possibleNumber = workingTime/currentSpecies.getFeedingDuration();
-                if(possibleNumber >= numberAnimal && numberAnimal > 0){
-                    String description = "Feed "+ Integer.toString(numberAnimal) + " " + currentSpecies.toString().toLowerCase();
-                    if(currentSpecies.toString().equals("FOX") && numberAnimal > 1){
-                        description +="es (";
+                int possibleNumber = workingTime / currentSpecies.getFeedingDuration();
+    
+                int animalsToFeed = Math.min(possibleNumber, numberAnimal - animalsFed);
+                if (animalsToFeed > 0) {
+                    String description = "Feed " + Integer.toString(animalsToFeed) + " " + currentSpecies.toString().toLowerCase();
+                    if (currentSpecies.toString().equals("FOX") && animalsToFeed > 1) {
+                        description += "es (";
+                    } else if (animalsToFeed > 1) {
+                        description += "s (";
+                    } else {
+                        description += " (";
                     }
-                    else if(numberAnimal > 1){
-                        description +="s (";
-                    }
-                    else{description +=" (";}
-
-                    for(Animal animal : currentAnimals){
+    
+                    for (int j = 0; j < animalsToFeed; j++) {
+                        Animal animal = currentAnimals.get(animalsFed + j);
                         description += animal.getNickName() + ", ";
                     }
-                    description = description.substring(0, description.length()-2);
+                    description = description.substring(0, description.length() - 2);
                     description += ")\n";
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
-                    break;
+    
+                    animalsFed += animalsToFeed;
+                    if (animalsFed >= numberAnimal) {
+                        break;
+                    }
                 }
-                                
             }
             currentAnimals = new ArrayList<Animal>();
             numberAnimal = 0;
             startTime = -1;
         }
-      
     }
+    
 
 
     
@@ -482,3 +504,4 @@ public void saveToFile(String formattedSchedule, LocalDate date){
         }
     }
 }
+
