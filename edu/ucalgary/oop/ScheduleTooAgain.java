@@ -194,12 +194,13 @@ public class ScheduleTooAgain {
                 int Time = this.availableTimes[i];
                 int workingTime = Time - currentSpecies.getFoodPrepDuration();
                 int possibleNumber = workingTime/currentSpecies.getFeedingDuration();
-                if(possibleNumber >= numberAnimal){
+                if(possibleNumber >= numberAnimal && numberAnimal > 0){
                     String description = "Feed "+ Integer.toString(numberAnimal) + " " + currentSpecies.toString().toLowerCase()+("s (");
                     for(Animal animal : currentAnimals){
                         description += animal.getNickName() + ", ";
                     }
-                    description += ")";
+                    description = description.substring(0, description.length()-2);
+                    description += ")\n";
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
                     break;
