@@ -35,15 +35,14 @@ public class ScheduleThree {
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
-            for (ScheduleItem item: this.treatmentItems){
-                this.timeUsed += item.getDuration();
-            }
             connection.close();
 
             Arrays.fill(this.availableTimes, 60);
             for (int i = 0; i < 24; i++){
                 this.schedule[i] = new ArrayList<ScheduleItem>();
             }
+
+            estimateTimeUsed();
 
             boolean buildCheck = false;
 
@@ -79,6 +78,13 @@ public class ScheduleThree {
     
     }
     
+
+    public void estimateTimeUsed(){
+        for (ScheduleItem item: this.treatmentItems){
+            this.timeUsed += item.getDuration();
+        }
+        
+    }
     
     public void retrieveAnimals(Statement statement) {
         try{
@@ -361,7 +367,7 @@ public class ScheduleThree {
     //Adjust start time for one treatment at a time to try to make workable schedule
     public void adjustDatabase(int problemHour){
         if (this.timeUsed > 48*60){
-            System.out.println("There are too many medical tasks that need to be completed for a 24-hour day.");
+            System.out.println("There are too many animal care tasks that need to be completed for a 24-hour day.");
             System.out.println("Please contact other rescues and arrange to transfer some animals for care elsewhere.");
             System.out.println("Adjust the database before re-trying schedule generation.");
             System.exit(1);
