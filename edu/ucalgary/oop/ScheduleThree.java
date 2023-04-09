@@ -35,6 +35,9 @@ public class ScheduleThree {
             Statement statement = connection.createStatement();
             retrieveAnimals(statement);
             retrieveTreatments(statement);
+            for (ScheduleItem item: this.treatmentItems){
+                this.timeUsed += item.getDuration();
+            }
             connection.close();
 
             Arrays.fill(this.availableTimes, 60);
@@ -135,7 +138,6 @@ public class ScheduleThree {
                     if (this.availableTimes[assignHour] >= duration){
                         this.schedule[assignHour].add(item);
                         this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
-                        this.timeUsed += duration;
                         assignCheck = true;
                         break;
                     }
@@ -152,7 +154,6 @@ public class ScheduleThree {
                             this.schedule[assignHour].add(item);
                             this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
                             this.volunteerNeeded[assignHour] = true;
-                            this.timeUsed += duration;
                             assignCheck = true;
                             break;
                         }
@@ -223,7 +224,6 @@ public class ScheduleThree {
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
                     this.availableTimes[i] -= currentSpecies.getCageCleanDuration()*cagesToClean;
-                    this.timeUsed += currentSpecies.getCageCleanDuration()*cagesToClean;
                         
                     cagesCleaned += cagesToClean;
                     if (cagesCleaned >= numberAnimal) {
@@ -293,7 +293,6 @@ public class ScheduleThree {
                         ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                         schedule[i].add(item);
                         this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
-                        this.timeUsed += currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
 
                         animalsFed += animalsToFeed;
                         if (animalsFed >= numberAnimal) {
@@ -362,7 +361,7 @@ public class ScheduleThree {
     //Adjust start time for one treatment at a time to try to make workable schedule
     public void adjustDatabase(int problemHour){
         if (this.timeUsed > 48*60){
-            System.out.println("There are too many tasks that need to be completed for a 24-hour day.");
+            System.out.println("There are too many medical tasks that need to be completed for a 24-hour day.");
             System.out.println("Please contact other rescues and arrange to transfer some animals for care elsewhere.");
             System.out.println("Adjust the database before re-trying schedule generation.");
             System.exit(1);
