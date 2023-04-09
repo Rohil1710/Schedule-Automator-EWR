@@ -170,7 +170,7 @@ public class ScheduleTooAgain {
             for (Animal animal: this.animals){
                 //TestPrint:
                 System.out.println("\tAnimal Species: "+animal.getSpecies());
-                if (animal.getSpecies() == currentSpecies.toString()){
+                if (animal.getSpecies().equals(currentSpecies.toString())){
                     currentAnimals.add(animal);
                     numberAnimal +=1;
                 }
