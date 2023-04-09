@@ -164,12 +164,21 @@ public class ScheduleTooAgain {
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
+        int window = 3;
+        int startTime = -1;
         for (Species currentSpecies : species){
-            //TestPrint:
-            System.out.println("Current Species: " + currentSpecies.toString());
+            String type = currentSpecies.getType();
+            Type typeEnum;
+			try{
+				typeEnum = Type.valueOf(type); 
+                startTime = typeEnum.getFeedingStartTime();
+				
+			}
+			catch(IllegalArgumentException e){
+				throw new IllegalArgumentException("Error: Invalid type found in generate tasks.");
+			}			
+
             for (Animal animal: this.animals){
-                //TestPrint:
-                System.out.println("\tAnimal Species: "+animal.getSpecies());
                 if (animal.getSpecies().equals(currentSpecies.toString())){
                     currentAnimals.add(animal);
                     numberAnimal +=1;
@@ -177,14 +186,14 @@ public class ScheduleTooAgain {
             }
             //Test prints:
             System.out.println("Number of "+ currentSpecies.toString() +"s: " + Integer.toString(numberAnimal));
-            for (Animal animal: currentAnimals){
-                System.out.println("\tAnimal ID: " + animal.getAnimalID());
-                System.out.println("\tNickname: " + animal.getNickName());
-                System.out.println("\n");
-                //System.out.println("Species: " + animal.getSpecies());
-            }
+            System.out.println("Feeding Start Time: " + Integer.toString(startTime));
+            //for (Animal animal: currentAnimals){
+                //System.out.println("\tAnimal ID: " + animal.getAnimalID());
+                //System.out.println("\tNickname: " + animal.getNickName());
+            //}
             currentAnimals = new ArrayList<Animal>();
             numberAnimal = 0;
+            startTime = -1;
         }
         // Coyote tasks
         //taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
