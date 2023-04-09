@@ -44,6 +44,7 @@ public class ScheduleTooAgain {
                 try{
                     assignTreatments();
                     generateFeedingTasks();
+                    generateCleaningTasks();
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
@@ -164,6 +165,54 @@ public class ScheduleTooAgain {
     }
 
     //Tasks done everyday:
+
+    public void generateCleaningTasks(){
+
+        Species species[] = Species.values();
+        ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
+        int numberAnimal = 0;
+        for (Species currentSpecies : species){
+            String type = currentSpecies.getType();
+            Type typeEnum;
+			try{
+				typeEnum = Type.valueOf(type); 			
+			}
+			catch(IllegalArgumentException e){
+				throw new IllegalArgumentException("Error: Invalid type found in generate cleaning tasks.");
+			}			
+
+            for (Animal animal: this.animals){
+                if (animal.getSpecies().equals(currentSpecies.toString())){
+                    currentAnimals.add(animal);
+                    numberAnimal +=1;
+                }
+            }
+
+            for (int i = 0; i < 24; i++){
+                int time = this.availableTimes[i];
+                int possibleNumber = time/currentSpecies.getCageCleanDuration();
+                if(possibleNumber >= numberAnimal && numberAnimal > 0){
+                    String description = "Clean "+ Integer.toString(numberAnimal) + " " + currentSpecies.toString().toLowerCase();
+                    if(numberAnimal > 1){
+                        description +="cages (";
+                    }
+                    else{description +="cage (";}
+
+                    for(Animal animal : currentAnimals){
+                        description += animal.getNickName() + ", ";
+                    }
+                    description = description.substring(0, description.length()-2);
+                    description += ")\n";
+                    ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
+                    schedule[i].add(item);
+                    break;
+                }
+            }
+        }
+
+    }
+
+
     public void generateFeedingTasks(){
 
         Species species[] = Species.values();
@@ -213,39 +262,13 @@ public class ScheduleTooAgain {
                     schedule[i].add(item);
                     break;
                 }
-                
+                                
             }
-            //Test prints:
-            System.out.println("Number of "+ currentSpecies.toString() +"S: " + Integer.toString(numberAnimal));
-            System.out.println("Feeding Start Time: " + Integer.toString(startTime));
             currentAnimals = new ArrayList<Animal>();
             numberAnimal = 0;
             startTime = -1;
         }
-        // Coyote tasks
-        //taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean coyote cage"));
-
-        // Porcupine tasks
-        //taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 10, "Feed and clean porcupine cage")); // Feed at 7 PM
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 10, "Clean porcupine cage"));
-
-        // Fox tasks
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 10, "Feed and clean fox cage")); // Feed at 12 AM
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean fox cage"));
-
-        // Raccoon tasks
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 5, "Feed and clean raccoon cage")); // Feed at 12 AM
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean raccoon cage"));
-
-        // Beaver tasks
-        //taskItems.add(new ScheduleItem(0, 0, 0, 8, 3, 5, "Feed and clean beaver cage")); // Feed at 8 AM
-        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean beaver cage"));
-
-        // Print all tasks
-        //for (ScheduleItem item : taskItems) {
-            //System.out.println("Task ID: " + item.getTaskID() + ", Description: " + item.getDescription());
-        //}
+      
     }
 
     public boolean isVolunteerNeeded(){
