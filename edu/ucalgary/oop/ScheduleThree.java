@@ -25,6 +25,7 @@ public class ScheduleThree {
     private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
     private ArrayList<Integer> orphanIDs= new ArrayList<Integer>();
     private int problemHour = -1;
+    private int timeUsed = 0;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
     public ScheduleThree() throws DatabaseConnectionException {
@@ -134,6 +135,7 @@ public class ScheduleThree {
                     if (this.availableTimes[assignHour] >= duration){
                         this.schedule[assignHour].add(item);
                         this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
+                        this.timeUsed += duration;
                         assignCheck = true;
                         break;
                     }
@@ -150,6 +152,7 @@ public class ScheduleThree {
                             this.schedule[assignHour].add(item);
                             this.availableTimes[assignHour] = this.availableTimes[assignHour] - duration;
                             this.volunteerNeeded[assignHour] = true;
+                            this.timeUsed += duration;
                             assignCheck = true;
                             break;
                         }
@@ -219,6 +222,8 @@ public class ScheduleThree {
                 
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
+                    this.availableTimes[i] -= currentSpecies.getCageCleanDuration()*cagesToClean;
+                    this.timeUsed += currentSpecies.getCageCleanDuration()*cagesToClean;
                         
                     cagesCleaned += cagesToClean;
                     if (cagesCleaned >= numberAnimal) {
@@ -288,6 +293,7 @@ public class ScheduleThree {
                         ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                         schedule[i].add(item);
                         this.availableTimes[i] -= currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
+                        this.timeUsed += currentSpecies.getFoodPrepDuration() + animalsToFeed*currentSpecies.getFeedingDuration();
 
                         animalsFed += animalsToFeed;
                         if (animalsFed >= numberAnimal) {
@@ -355,6 +361,13 @@ public class ScheduleThree {
 
     //Adjust start time for one treatment at a time to try to make workable schedule
     public void adjustDatabase(int problemHour){
+        if (this.timeUsed > 48*60){
+            System.out.println("There are too many tasks that need to be completed for a 24-hour day.");
+            System.out.println("Please contact other rescues and arrange to transfer some animals for care elsewhere.");
+            System.out.println("Adjust the database before re-trying schedule generation.");
+            System.exit(1);
+        }
+
         ArrayList<ScheduleItem> problemTreatments = new ArrayList<ScheduleItem>();
         for (ScheduleItem item : this.getTreatmentItems()){
             if (item.getStartHour() == problemHour){
@@ -430,6 +443,7 @@ public class ScheduleThree {
             this.treatmentItems = new ArrayList<ScheduleItem>();
             this.availableTimes = new int[24];
             this.volunteerNeeded = new boolean[24]; 
+            this.timeUsed = 0;
             Statement statement = connection.createStatement();
             retrieveTreatments(statement);
 
@@ -442,7 +456,7 @@ public class ScheduleThree {
         }
 
         problemHour = -1;
-        System.out.println("\n***STILL UNDER CONSTRUCTION***");
+        //System.out.println("\n***STILL UNDER CONSTRUCTION***");
     }
 
     
