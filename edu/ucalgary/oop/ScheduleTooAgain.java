@@ -160,30 +160,52 @@ public class ScheduleTooAgain {
 
     //Tasks done everyday:
     public void generateTasks(){
+
+        Species species[] = Species.values();
+        ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
+        int numberAnimal = 0;
+        for (Species currentSpecies : species){
+            for (Animal animal: this.animals){
+                if (animal.getSpecies() == currentSpecies.toString()){
+                    currentAnimals.add(animal);
+                    numberAnimal +=1;
+                }
+            }
+            //Test prints:
+            System.out.println("Number of "+ currentSpecies.toString() +"s: " + Integer.toString(numberAnimal));
+            for (Animal animal: this.animals){
+                System.out.println("\tAnimal ID: " + animal.getAnimalID());
+                System.out.println("\tNickname: " + animal.getNickName());
+                System.out.println("\n");
+                //System.out.println("Species: " + animal.getSpecies());
+            }
+            currentAnimals = new ArrayList<Animal>();
+            numberAnimal = 0;
+        }
         // Coyote tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean coyote cage"));
+        //taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 15, "Feed and clean coyote cage")); // Feed at 7 PM
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean coyote cage"));
 
         // Porcupine tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 10, "Feed and clean porcupine cage")); // Feed at 7 PM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 10, "Clean porcupine cage"));
+        //taskItems.add(new ScheduleItem(0, 0, 0, 19, 3, 10, "Feed and clean porcupine cage")); // Feed at 7 PM
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 10, "Clean porcupine cage"));
 
         // Fox tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 10, "Feed and clean fox cage")); // Feed at 12 AM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean fox cage"));
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 10, "Feed and clean fox cage")); // Feed at 12 AM
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean fox cage"));
 
         // Raccoon tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 5, "Feed and clean raccoon cage")); // Feed at 12 AM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean raccoon cage"));
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 3, 5, "Feed and clean raccoon cage")); // Feed at 12 AM
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean raccoon cage"));
 
         // Beaver tasks
-        taskItems.add(new ScheduleItem(0, 0, 0, 8, 3, 5, "Feed and clean beaver cage")); // Feed at 8 AM
-        taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean beaver cage"));
+        //taskItems.add(new ScheduleItem(0, 0, 0, 8, 3, 5, "Feed and clean beaver cage")); // Feed at 8 AM
+        //taskItems.add(new ScheduleItem(0, 0, 0, 0, 24, 5, "Clean beaver cage"));
 
         // Print all tasks
-        for (ScheduleItem item : taskItems) {
-            System.out.println("Task ID: " + item.getTaskID() + ", Description: " + item.getDescription());
-        }
+        //for (ScheduleItem item : taskItems) {
+            //System.out.println("Task ID: " + item.getTaskID() + ", Description: " + item.getDescription());
+        //}
     }
 
     public boolean isVolunteerNeeded(){
