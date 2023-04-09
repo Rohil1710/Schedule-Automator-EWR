@@ -19,6 +19,7 @@ public class ScheduleTooAgain {
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[24]; 
     private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
     private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
+    private ArrayList<Integer> orphanIDs= new ArrayList<Integer>();
     private int problemHour = -1;
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
@@ -149,6 +150,10 @@ public class ScheduleTooAgain {
                 }
             }
 
+            if(item.getDescription().contains("Kit feeding")){
+                this.orphanIDs.add(item.getAnimalID());
+            }
+
             if (assignCheck == false){
                 this.problemHour = startHour;
                 throw new TimeLimitExceededException("Unable to assign task within required window. Please consult vetrenarian and adjust times in database.");
@@ -179,7 +184,7 @@ public class ScheduleTooAgain {
 			}			
 
             for (Animal animal: this.animals){
-                if (animal.getSpecies().equals(currentSpecies.toString())){
+                if (animal.getSpecies().equals(currentSpecies.toString()) && this.orphanIDs.contains(animal.getAnimalID()) == false){
                     currentAnimals.add(animal);
                     numberAnimal +=1;
                 }
@@ -192,9 +197,9 @@ public class ScheduleTooAgain {
                 if(possibleNumber >= numberAnimal){
                     String description = "Feed "+ Integer.toString(numberAnimal) + " " + currentSpecies.toString().toLowerCase()+("s (");
                     for(Animal animal : currentAnimals){
-                        description += animal.getNickName();
+                        description += animal.getNickName() + ", ";
                     }
-                    description +=")";
+                    description += ")";
                     ScheduleItem item = new ScheduleItem(0, 0, 0, 0, 0, 0, description);
                     schedule[i].add(item);
                     break;
