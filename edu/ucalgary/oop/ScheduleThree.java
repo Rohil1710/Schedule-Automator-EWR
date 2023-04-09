@@ -83,7 +83,32 @@ public class ScheduleThree {
         for (ScheduleItem item: this.treatmentItems){
             this.timeUsed += item.getDuration();
         }
-        
+
+        Species species[] = Species.values();
+        ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
+        int numberAnimal = 0;
+        for (Species currentSpecies : species){
+            String type = currentSpecies.getType();
+            Type typeEnum;
+			try{
+				typeEnum = Type.valueOf(type); 			
+			}
+			catch(IllegalArgumentException e){
+				throw new IllegalArgumentException("Error: Invalid type found in generate cleaning tasks.");
+			}			
+
+            for (Animal animal: this.animals){
+                if (animal.getSpecies().equals(currentSpecies.toString())){
+                    currentAnimals.add(animal);
+                    numberAnimal +=1;
+                }
+            }
+            
+            int cleanTimeNeeded = currentSpecies.getCageCleanDuration()*numberAnimal;
+            int feedTimeNeeded = currentSpecies.getFoodPrepDuration()  + currentSpecies.getFeedingDuration()*numberAnimal;
+            this.timeUsed += cleanTimeNeeded + feedTimeNeeded;
+        }        
+
     }
     
     public void retrieveAnimals(Statement statement) {
