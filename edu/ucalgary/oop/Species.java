@@ -14,6 +14,7 @@ public enum Species{
 	BEAVER,
 	RACCOON;
 
+	@Override
 	public String toString(){
 		switch(this){
 			case COYOTE:
