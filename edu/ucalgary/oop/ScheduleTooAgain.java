@@ -173,7 +173,7 @@ public class ScheduleTooAgain {
             }
             //Test prints:
             System.out.println("Number of "+ currentSpecies.toString() +"s: " + Integer.toString(numberAnimal));
-            for (Animal animal: this.animals){
+            for (Animal animal: currentAnimals){
                 System.out.println("\tAnimal ID: " + animal.getAnimalID());
                 System.out.println("\tNickname: " + animal.getNickName());
                 System.out.println("\n");
