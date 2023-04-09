@@ -165,6 +165,8 @@ public class ScheduleTooAgain {
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
         for (Species currentSpecies : species){
+            //TestPrint:
+            //System.out.println("Current Species: " + currentSpecies.toString());
             for (Animal animal: this.animals){
                 if (animal.getSpecies() == currentSpecies.toString()){
                     currentAnimals.add(animal);
