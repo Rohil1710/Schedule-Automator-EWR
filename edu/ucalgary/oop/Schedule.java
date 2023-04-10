@@ -20,7 +20,6 @@ public class Schedule {
     private ArrayList<Animal> animals = new ArrayList<Animal>();
     private ArrayList<ScheduleItem>[] schedule = new ArrayList[24]; 
     private ArrayList<ScheduleItem> treatmentItems = new ArrayList<ScheduleItem>();
-    private ArrayList<ScheduleItem> taskItems = new ArrayList<ScheduleItem>();
     private ArrayList<Integer> orphanIDs= new ArrayList<Integer>();
     private int problemHour = -1;
     private int timeUsed = 0;
@@ -493,30 +492,52 @@ public class Schedule {
     
     
     // GETTERS:
-    
+
+   /**
+   * Method to return ArrayList of animals stored in the Schedule object.
+   * @return this.animals
+   */
     public ArrayList<Animal> getAnimals(){
         return this.animals;
     }
     
+    /**
+   * Method to return ArrayList of scheduleItems (medical tasks) stored in the Schedule object.
+   * @return this.treatmentItems
+   */
     public ArrayList<ScheduleItem> getTreatmentItems(){
         return this.treatmentItems;
     }
     
-    public ArrayList<ScheduleItem> getTaskItems(){
-        return this.taskItems;
-    }
-    
+    /**
+    * Method to return Array of available time in minutes for which hour in the day, stored in the Schedule object.
+    * @return this.availableTimes
+    */
     public int[] getAvailableTimes(){
         return this.availableTimes;
     }
-        
+     
+    /**
+    * Method to return Array of boolean values to indicate whether or not a volunteer is needed per hour, stored in the Schedule object.
+    * @return this.volunteerNeeded
+    */
     public boolean[] getVolunteerNeeded(){
         return this.volunteerNeeded;
     }
 
+    /**
+    * Method to return ArrayList of ScheduleItems (tasks) for the indicated hour, stored in the Schedule object.
+    * @param hour the hour to retreive tasks from as an integer value
+    * @return this.availableTimes
+    */
     public ArrayList<ScheduleItem> getHourSchedule(int hour){
         return this.schedule[hour];
     }
+
+    /**
+    * Method to convert entire day's schedule into a single, formatted string. Calls saveToFile to output .txt version.
+    * @return formattedSchedule
+    */
     
 // Formats the schedule into a single string, creates a .txt file and outputs string version of schedule to terminal.
     public String formatSchedule(){
@@ -544,12 +565,19 @@ public class Schedule {
             }
         }
 
+        //Call to saveToFile to save .txt file of generated schedule.
         this.saveToFile(formattedSchedule, date);
         return formattedSchedule;
     }
-    
 
-public void saveToFile(String formattedSchedule, LocalDate date){
+    /**
+    * Method to save schedule as a .txt file, name will have format: 'Schedule_YYYY-MM-DD'.
+    * @param formattedSchedule the formatted string version of the Schedule item to format
+    * @param date the date for the Schedule (date following day of generation)
+    * @return formattedSchedule
+    */
+
+    public void saveToFile(String formattedSchedule, LocalDate date){
     String fileName = "Schedule_" + date.toString() + ".txt";
         try {
             FileWriter output = new FileWriter(fileName);
