@@ -66,10 +66,7 @@ public class Schedule {
                     buildCheck = true;
                 }
                 catch(TimeLimitExceededException e){
-                    //System.out.println(e.getMessage());
                     adjustDatabase(this.problemHour);
-                    //buildCheck = true;  //Just to see what its doing so far
-                    //System.exit(1);
                 }
             }
 
@@ -84,7 +81,6 @@ public class Schedule {
         catch (Exception e) {
             System.out.println(e.getMessage());
             throw new DatabaseConnectionException("Database Error");
-            //e.printStackTrace();
         }
     
     }
@@ -357,9 +353,6 @@ public class Schedule {
         }
     }
     
-
-
-    
     private boolean isVolunteerNeeded(){
         boolean needed = false;
         for (int i = 0; i < 24; i++){
@@ -495,12 +488,10 @@ public class Schedule {
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
-            //throw new DatabaseConnectionException("Database Error");
-            //e.printStackTrace();
         }
 
         problemHour = -1;
-        //System.out.println("\n***STILL UNDER CONSTRUCTION***");
+        
     }
 
     
