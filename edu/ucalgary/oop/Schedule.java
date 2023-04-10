@@ -76,7 +76,7 @@ public class Schedule {
     }
     
 
-    public void estimateTimeUsed(){
+    private void estimateTimeUsed(){
         for (ScheduleItem item: this.treatmentItems){
             this.timeUsed += item.getDuration();
         }
@@ -111,7 +111,7 @@ public class Schedule {
         System.out.println("\nAdded durations for cleaning and feeding tasks. Estimated time used is: " + Integer.toString(timeUsed));
     }
     
-    public void retrieveAnimals(Statement statement) {
+    private void retrieveAnimals(Statement statement) {
         try{
                 
             ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
@@ -131,7 +131,7 @@ public class Schedule {
     
     }
 
-    public void retrieveTreatments(Statement statement) {
+    private void retrieveTreatments(Statement statement) {
         try{
             
             ResultSet resultSet = statement.executeQuery("SELECT TREATMENTS.TreatmentID, TREATMENTS.AnimalID, TREATMENTS.TaskID, TREATMENTS.StartHour, TASKS.MaxWindow, TASKS.Duration, TASKS.Description FROM TREATMENTS INNER JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID;");
@@ -156,7 +156,7 @@ public class Schedule {
     
     }
 
-    public void assignTreatments() throws TimeLimitExceededException {
+    private void assignTreatments() throws TimeLimitExceededException {
         for(ScheduleItem item : this.treatmentItems){
             int startHour = item.getStartHour();
             int duration = item.getDuration();
@@ -209,7 +209,7 @@ public class Schedule {
 
     //Tasks done everyday:
 
-    public void generateCleaningTasks(){
+    private void generateCleaningTasks(){
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
@@ -271,7 +271,7 @@ public class Schedule {
     }
 
 
-    public void generateFeedingTasks()  throws TimeLimitExceededException{
+    private void generateFeedingTasks()  throws TimeLimitExceededException{
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
         int numberAnimal = 0;
@@ -346,7 +346,7 @@ public class Schedule {
 
 
     
-    public boolean isVolunteerNeeded(){
+    private boolean isVolunteerNeeded(){
         boolean needed = false;
         for (int i = 0; i < 24; i++){
             if (this.volunteerNeeded[i] == true){
@@ -358,7 +358,7 @@ public class Schedule {
         return needed;
     }
 
-    public void confirmVolunteer(){
+    private void confirmVolunteer(){
         
         System.out.println("\nA back-up volunteer is required for the following times:");
         for (int i = 0; i < 24; i++){
@@ -390,7 +390,7 @@ public class Schedule {
 
 
     //Adjust start time for one treatment at a time to try to make workable schedule
-    public void adjustDatabase(int problemHour){
+    private void adjustDatabase(int problemHour){
         if (this.timeUsed > 48*60){
             System.out.println("There is not enough time in one day to care for this number of animals (medical and regular tasks), even with a backup volunteer.");
             System.out.println("Please contact other rescues and arrange to transfer some animals for care elsewhere.");
@@ -577,7 +577,7 @@ public class Schedule {
     * @return formattedSchedule
     */
 
-    public void saveToFile(String formattedSchedule, LocalDate date){
+    private void saveToFile(String formattedSchedule, LocalDate date){
     String fileName = "Schedule_" + date.toString() + ".txt";
         try {
             FileWriter output = new FileWriter(fileName);
