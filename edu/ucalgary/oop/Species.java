@@ -1,7 +1,7 @@
 /**
 @author Tanis Smith <a href="mailto:tanis.smith@ucalgary.ca">
 tanis.smith@ucalgary.ca</a>
-@version 1.1
+@version 1.2
 @since 1.0
 */
 
