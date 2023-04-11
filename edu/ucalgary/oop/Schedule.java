@@ -37,61 +37,46 @@ public class Schedule {
     private ArrayList<Integer> orphanIDs= new ArrayList<Integer>();
     private int problemHour = -1;
     private int timeUsed = 0;
+    private boolean buildCheck = false;
+    private String url = "jdbc:mysql://localhost/EWR";
     
     // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
-    public Schedule() throws DatabaseConnectionException {
-    
-        try {
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
-            Statement statement = connection.createStatement();
-            retrieveAnimals(statement);
-            retrieveTreatments(statement);
-            connection.close();
-
-            Arrays.fill(this.availableTimes, 60);
-            for (int i = 0; i < 24; i++){
-                this.schedule[i] = new ArrayList<ScheduleItem>();
-            }
-
-            estimateTimeUsed();
-
-            boolean buildCheck = false;
-
-            while(buildCheck == false){
+    public Schedule() {
+        Arrays.fill(this.availableTimes, 60);
             
-                try{
-                    assignTreatments();
-                    generateFeedingTasks();
-                    generateCleaningTasks();
-                    buildCheck = true;
-                }
-                catch(TimeLimitExceededException e){
-                    adjustDatabase(this.problemHour);
-                }
-            }
-
-            boolean needed = isVolunteerNeeded();
-            if (needed == true){
-                confirmVolunteer();
-            }
-            
-    
-        }
-        
-        catch (Exception e) {
-            System.out.println(e.getMessage());
-            throw new DatabaseConnectionException("Database Error");
+        for (int i = 0; i < 24; i++){
+            this.schedule[i] = new ArrayList<ScheduleItem>();
         }
     
     }
     
+    public void buildSchedule() {
 
-    private void estimateTimeUsed(){
+        while(buildCheck == false){
+            
+            try{
+                assignTreatments();
+                generateFeedingTasks();
+                generateCleaningTasks();
+                buildCheck = true;
+            }
+            catch(TimeLimitExceededException e){
+                adjustDatabase(this.problemHour);
+            }
+        }
+
+        //boolean needed = isVolunteerNeeded();
+        //if (needed == true){
+            //confirmVolunteer();
+        //}     
+    
+    }
+        
+
+    public void estimateTimeUsed(){
         for (ScheduleItem item: this.treatmentItems){
             this.timeUsed += item.getDuration();
         }
-
-        System.out.println("\nAdded durations for medical tasks. Estimated time used is: " + Integer.toString(timeUsed));
 
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
@@ -113,18 +98,21 @@ public class Schedule {
                 }
             }
             
-            int cleanTimeNeeded = currentSpecies.getCageCleanDuration()*numberAnimal;
-            int feedTimeNeeded = currentSpecies.getFoodPrepDuration()  + currentSpecies.getFeedingDuration()*numberAnimal;
-            this.timeUsed += cleanTimeNeeded + feedTimeNeeded;
+            if(numberAnimal>0){
+                int cleanTimeNeeded = currentSpecies.getCageCleanDuration()*numberAnimal;
+                int feedTimeNeeded = currentSpecies.getFoodPrepDuration()  + currentSpecies.getFeedingDuration()*numberAnimal;
+                this.timeUsed += cleanTimeNeeded + feedTimeNeeded;
+            }
+            numberAnimal = 0;
         }        
 
-        System.out.println("\nAdded durations for cleaning and feeding tasks. Estimated time used is: " + Integer.toString(timeUsed));
     }
     
-    private void retrieveAnimals(Statement statement) {
+    public void retrieveAnimals() throws DatabaseConnectionException{
         try{
-                
-            ResultSet rs = statement.executeQuery("SELECT * FROM EWR.ANIMALS;");
+            Connection connection = DriverManager.getConnection(this.url, "oop", "password");
+            Statement statement = connection.createStatement();               
+            ResultSet rs = statement.executeQuery("SELECT * FROM ANIMALS;");
             while (rs.next()) {
                 int animalID = rs.getInt("AnimalID");
                 String animalNickname = rs.getString("AnimalNickname");
@@ -133,17 +121,20 @@ public class Schedule {
                 Animal animal = new Animal(animalID, animalNickname, animalSpecies);
                 this.animals.add(animal);
             }
+            connection.close(); 
         }
     
         catch(SQLException e){
             e.printStackTrace();
+            throw new DatabaseConnectionException("Database Error in retrieveAnimals.");
         }
     
     }
 
-    private void retrieveTreatments(Statement statement) {
+    public void retrieveTreatments() throws DatabaseConnectionException{
         try{
-            
+            Connection connection = DriverManager.getConnection(this.url, "oop", "password");
+            Statement statement = connection.createStatement();             
             ResultSet resultSet = statement.executeQuery("SELECT TREATMENTS.TreatmentID, TREATMENTS.AnimalID, TREATMENTS.TaskID, TREATMENTS.StartHour, TASKS.MaxWindow, TASKS.Duration, TASKS.Description FROM TREATMENTS INNER JOIN TASKS ON TREATMENTS.TaskID = TASKS.TaskID;");
             while (resultSet.next()) {
                 int treatmentID = resultSet.getInt("TreatmentID");
@@ -158,10 +149,12 @@ public class Schedule {
                         description);
                 this.treatmentItems.add(item);
             }
+            connection.close();
         }
     
         catch(SQLException e){
             e.printStackTrace();
+            throw new DatabaseConnectionException("Database Error in retrieveTreatments.");
         }
     
     }
@@ -353,7 +346,7 @@ public class Schedule {
         }
     }
     
-    private boolean isVolunteerNeeded(){
+    public boolean isVolunteerNeeded(){
         boolean needed = false;
         for (int i = 0; i < 24; i++){
             if (this.volunteerNeeded[i] == true){
@@ -365,7 +358,7 @@ public class Schedule {
         return needed;
     }
 
-    private void confirmVolunteer(){
+    public void confirmVolunteer(){
         
         System.out.println("\nA back-up volunteer is required for the following times:");
         for (int i = 0; i < 24; i++){
@@ -445,7 +438,7 @@ public class Schedule {
         System.out.println("Treatment ID entered: " + Integer.toString(fixID));
 
         try{
-            Connection connection = DriverManager.getConnection("jdbc:mysql://localhost/EWR", "user1", "ensf");
+            Connection connection = DriverManager.getConnection(this.url, "oop", "password");
             String update = new String("UPDATE TREATMENTS SET StartHour = ? WHERE TreatmentID = ?;");
             PreparedStatement preparedStatement = connection.prepareStatement(update);
             int newHour = -1;
@@ -481,10 +474,11 @@ public class Schedule {
             this.availableTimes = new int[24];
             this.volunteerNeeded = new boolean[24]; 
             this.timeUsed = 0;
-            Statement statement = connection.createStatement();
-            retrieveTreatments(statement);
-
             connection.close();
+            
+            retrieveTreatments();
+
+            
         }
         catch (Exception e) {
             System.out.println(e.getMessage());
@@ -495,6 +489,21 @@ public class Schedule {
     }
 
     
+    //SETTERS:
+
+    public void setAnimals(ArrayList<Animal> givenAnimals){
+        this.animals = new ArrayList<Animal>();
+        for(Animal animal : givenAnimals){
+            this.animals.add(animal);
+        }
+    }
+
+    public void setTreatmentItems(ArrayList<ScheduleItem> givenTreatments){
+        this.treatmentItems = new ArrayList<ScheduleItem>();
+        for(ScheduleItem item : givenTreatments){
+            this.treatmentItems.add(item);
+        }
+    }
     
     // GETTERS:
 
@@ -537,6 +546,27 @@ public class Schedule {
     */
     public ArrayList<ScheduleItem> getHourSchedule(int hour){
         return this.schedule[hour];
+    }
+
+    
+    public ArrayList<Integer> getOrphanIDs(){
+        return this.orphanIDs;
+    }
+
+    public int getProblemHour(){
+        return this.problemHour;
+    }
+
+    public int getTimeUsed(){
+        return this.timeUsed;
+    }
+
+    public boolean getBuildCheck(){
+        return this.buildCheck;
+    }
+
+    public String getUrl(){
+        return this.url;
     }
 
     /**
