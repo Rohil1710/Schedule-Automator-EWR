@@ -11,7 +11,6 @@ abhyudai.singh@ucalgary.ca</a>
 @since 1.0
 */
 
-
 package edu.ucalgary.oop;
 
 import java.sql.Connection;
@@ -40,7 +39,10 @@ public class Schedule {
     private boolean buildCheck = false;
     private String url = "jdbc:mysql://localhost/EWR";
     
-    // CONSTRUCTOR - retrieves all required data from database and initializes data members via helper functions to create the schedule.
+    /**
+     * This constructor initializes the schedule by filling the availableTimes and
+     * schedule data members with default values.
+     */
     public Schedule() {
         Arrays.fill(this.availableTimes, 60);
             
@@ -50,6 +52,12 @@ public class Schedule {
     
     }
     
+    /**
+     * This method generates the schedule by calling helper methods to assign
+     * treatments, generate feeding tasks, and generate cleaning tasks. It uses a
+     * while loop to ensure that if a TimeLimitExceededException is thrown, it will
+     * adjust the database and try again until a successful build occurs.
+     */
     public void buildSchedule() {
 
         while(buildCheck == false){
@@ -64,15 +72,19 @@ public class Schedule {
                 adjustDatabase(this.problemHour);
             }
         }
-
-        //boolean needed = isVolunteerNeeded();
-        //if (needed == true){
-            //confirmVolunteer();
-        //}     
     
     }
         
-
+    /**
+     * Estimates the total time needed for completing all the scheduled tasks.
+     * Adds up the duration of all the medical tasks in the schedule and then adds
+     * the duration of cleaning and feeding tasks for each animal species in the
+     * schedule.
+     * Finally, it updates the total time used by adding up all the durations.
+     * 
+     * @throws IllegalArgumentException if an invalid animal species type is found
+     *                                  in the generate cleaning tasks function
+     */
     public void estimateTimeUsed(){
         for (ScheduleItem item: this.treatmentItems){
             this.timeUsed += item.getDuration();
@@ -108,6 +120,12 @@ public class Schedule {
 
     }
     
+    /**
+
+    Retrieves animals from the database and adds them to the list of animals.
+
+    @throws DatabaseConnectionException if there is an error in connecting to the database or executing the query
+    */
     public void retrieveAnimals() throws DatabaseConnectionException{
         try{
             Connection connection = DriverManager.getConnection(this.url, "oop", "password");
@@ -131,6 +149,11 @@ public class Schedule {
     
     }
 
+    /**
+    Retrieves treatments from the database and populates the 'treatmentItems' ArrayList of Schedule objects.
+
+    @throws DatabaseConnectionException If there is an error connecting to the database.
+    */
     public void retrieveTreatments() throws DatabaseConnectionException{
         try{
             Connection connection = DriverManager.getConnection(this.url, "oop", "password");
@@ -159,6 +182,16 @@ public class Schedule {
     
     }
 
+    /**
+     * 
+     * Assigns treatments to available times in the schedule.
+     * 
+     * Throws TimeLimitExceededException if a treatment cannot be assigned within
+     * the required window.
+     * 
+     * @throws TimeLimitExceededException if a treatment cannot be assigned within
+     *                                    the required window.
+     */
     private void assignTreatments() throws TimeLimitExceededException {
         for(ScheduleItem item : this.treatmentItems){
             int startHour = item.getStartHour();
@@ -210,8 +243,12 @@ public class Schedule {
         }
     }
 
-    //Tasks done everyday:
-
+   
+    /**
+     * Generates cleaning tasks for all animal species.
+     * Uses the available time slots in the schedule to add cleaning tasks to the
+     * schedule.
+     */
     private void generateCleaningTasks(){
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
@@ -273,7 +310,16 @@ public class Schedule {
         }
     }
 
-
+    /**
+     * 
+     * Generates feeding tasks for the animals based on their species and available
+     * times. Throws an exception if there are
+     * 
+     * too many animals to feed during a given hour.
+     * 
+     * @throws TimeLimitExceededException if there are too many animals to feed
+     *                                    during a given hour
+     */
     private void generateFeedingTasks()  throws TimeLimitExceededException{
         Species species[] = Species.values();
         ArrayList<Animal> currentAnimals = new ArrayList<Animal>();
@@ -346,50 +392,17 @@ public class Schedule {
         }
     }
     
-    public boolean isVolunteerNeeded(){
-        boolean needed = false;
-        for (int i = 0; i < 24; i++){
-            if (this.volunteerNeeded[i] == true){
-                needed = true;
-                break;
-            }
-        }
-        
-        return needed;
-    }
 
-    public void confirmVolunteer(){
-        
-        System.out.println("\nA back-up volunteer is required for the following times:");
-        for (int i = 0; i < 24; i++){
-            if (this.volunteerNeeded[i] == true){
-                String hour = Integer.toString(i)+":00";
-                System.out.println("\n\t"+hour);
-            }
-        }
-
-        boolean confirm = false;
-
-        while(confirm == false){
-            System.out.println("\nPlease contact the back-up volunteer(s), then enter 'Y' to confirm:");
-            Scanner input = new Scanner(System.in);
-            String line = input.nextLine();
-            if(line.equals("Y") || line.equals("y")){
-                confirm = true;
-            }
-
-            else {
-                System.out.println("\nOops! Invalid input.");
-            }
-
-        }
-
-        System.out.println("\nBack-up volunteers confirmed.");
-    
-    }
-
-
-    //Adjust start time for one treatment at a time to try to make workable schedule
+    /**
+     * 
+     * Adjusts the schedule if there is not enough time in one day to care for all
+     * animals, even with a backup volunteer.
+     * 
+     * Allows the user to change the start time for a treatment that is scheduled
+     * during a problematic hour.
+     * 
+     * @param problemHour the hour where too many tasks need to be scheduled
+     */
     private void adjustDatabase(int problemHour){
         if (this.timeUsed > 48*60){
             System.out.println("There is not enough time in one day to care for this number of animals (medical and regular tasks), even with a backup volunteer.");
@@ -489,8 +502,12 @@ public class Schedule {
     }
 
     
-    //SETTERS:
-
+    
+    /**
+     * Sets the list of animals to be managed
+     *
+     * @param givenAnimals The list of animals to set.
+     */
     public void setAnimals(ArrayList<Animal> givenAnimals){
         this.animals = new ArrayList<Animal>();
         for(Animal animal : givenAnimals){
@@ -498,6 +515,11 @@ public class Schedule {
         }
     }
 
+    /**
+     * Sets the list of treatment items to be scheduled
+     *
+     * @param givenTreatments The list of treatment items to set.
+     */
     public void setTreatmentItems(ArrayList<ScheduleItem> givenTreatments){
         this.treatmentItems = new ArrayList<ScheduleItem>();
         for(ScheduleItem item : givenTreatments){
@@ -505,7 +527,7 @@ public class Schedule {
         }
     }
     
-    // GETTERS:
+
 
    /**
    * Method to return ArrayList of animals stored in the Schedule object.
@@ -548,33 +570,53 @@ public class Schedule {
         return this.schedule[hour];
     }
 
-    
+    /**
+    Returns an ArrayList of integers representing the IDs of orphans associated with this object.
+    @return the ArrayList of orphan IDs
+    */
     public ArrayList<Integer> getOrphanIDs(){
         return this.orphanIDs;
     }
 
+    /**
+    Returns the hour of the day (in 24-hour format) when the problem associated with this object was reported.
+    @return the problem hour
+    */
     public int getProblemHour(){
         return this.problemHour;
     }
 
+    /**
+    Returns the amount of time (in seconds) that was spent on resolving the problem associated with this object.
+    @return the time used
+    */
     public int getTimeUsed(){
         return this.timeUsed;
     }
 
+    /**
+    Returns a boolean value indicating whether the build associated with this object has passed all checks.
+    @return the build check result
+    */
     public boolean getBuildCheck(){
         return this.buildCheck;
     }
 
+    /**
+    Returns the URL associated with this object.
+    @return the URL
+    */
     public String getUrl(){
         return this.url;
     }
 
+    
     /**
-    * Method to convert entire day's schedule into a single, formatted string. Calls saveToFile to output .txt version.
+    * Method to save schedule as a .txt file, name will have format: 'Schedule_YYYY-MM-DD'.
+    * @param formattedSchedule the formatted string version of the Schedule item to format
+    * @param date the date for the Schedule (date following day of generation)
     * @return formattedSchedule
     */
-    
-// Formats the schedule into a single string, creates a .txt file and outputs string version of schedule to terminal.
     public String formatSchedule(){
         String formattedSchedule = new String();
         LocalDate date = LocalDate.now();
@@ -605,13 +647,17 @@ public class Schedule {
         return formattedSchedule;
     }
 
+    
     /**
-    * Method to save schedule as a .txt file, name will have format: 'Schedule_YYYY-MM-DD'.
-    * @param formattedSchedule the formatted string version of the Schedule item to format
-    * @param date the date for the Schedule (date following day of generation)
-    * @return formattedSchedule
-    */
-
+     * Method to save schedule as a .txt file, name will have format:
+     * 'Schedule_YYYY-MM-DD'.
+     * 
+     * @param formattedSchedule the formatted string version of the Schedule item to
+     *                          format
+     * @param date              the date for the Schedule (date following day of
+     *                          generation)
+     * @return formattedSchedule
+     */
     private void saveToFile(String formattedSchedule, LocalDate date){
     String fileName = "Schedule_" + date.toString() + ".txt";
         try {
