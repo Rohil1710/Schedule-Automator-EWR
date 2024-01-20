@@ -1,4 +1,4 @@
-# Wildlife-Rescue-Automation-System
+# Wildlife Rescue Schedule Automation System
 
 ## Overview
 Developed an advanced Java application aimed at optimizing the daily operations of wildlife rescue volunteers. This system is specially designed to enhance the efficiency of animal care in rescue centers.
